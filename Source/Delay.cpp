@@ -1,65 +1,105 @@
 #include "Delay.h"
 
-void Delay::prepareToPlay (int readPointer)
+namespace Constants
 {
-    delayBuffer.clear();
-
-    writeHeadPos = 0;
-
-    writeHead = std::make_unique<LagrangeInterpolator>();
-    readHead  = std::make_unique<LagrangeInterpolator>();
-
-    readHeadPos = (writeHeadPos - readPointer + delayBufferSize) % delayBufferSize;
-
-    inputBuffer.setSize (1, 100);
-    outputBuffer.setSize (1, 100);
-
-    isActive = true;
+    constexpr auto smoothedValueRamp = 0.05f;
+    constexpr auto delayTimeSmoothedValueRamp = 0.25f;
+    constexpr auto maximumDelaySeconds = 4.0f;
+    constexpr auto maximumDelaySampleRate = 192000.0f;
+    constexpr auto maximumDelaySamples = static_cast<int>(maximumDelaySeconds * maximumDelaySampleRate);
 }
 
-void Delay::delayParams (bool isActive, float delayTime)
+Delay::Delay(ParamsData& params) :
+    m_params(params),
+    m_sampleRate(0.0),
+    m_delayLine(Constants::maximumDelaySamples)
 {
-    this->isActive  = isActive;
-    this->delayTime = delayTime;
 }
 
-void Delay::reset()
+void Delay::prepare(const juce::dsp::ProcessSpec& spec)
 {
-    delayBuffer.clear();
-    writeHead->reset();
-    readHead.reset();
+    m_sampleRate = spec.sampleRate;
+    m_adsr.setSampleRate(m_sampleRate);
+
+    jassert(m_sampleRate <= Constants::maximumDelaySampleRate);
+
+    m_dryWet.reset(m_sampleRate, Constants::smoothedValueRamp);
+    m_time.reset(m_sampleRate, Constants::delayTimeSmoothedValueRamp);
+    m_feedback.reset(m_sampleRate, Constants::smoothedValueRamp);
+
+    updateParams();
+
+    m_delayLine.reset();
+    m_delayLine.prepare(spec);
+    m_delayLine.setDelay(m_time.getCurrentValue() * static_cast<float>(m_sampleRate));
 }
 
-void Delay::writeSample (float sample)
+void Delay::process(const juce::dsp::ProcessContextReplacing<float>& context)
 {
-    // auto inData = buffer.getArrayOfReadPointers();
-    // auto outData = buffer.getArrayOfWritePointers();
+    const auto& inputBlock = context.getInputBlock();
+    auto&       outputBlock = context.getOutputBlock();
+    const auto  numChannels = outputBlock.getNumChannels();
+    const auto  numSamples = outputBlock.getNumSamples();
 
-    // auto delayRData = delayBuffer.getArrayOfReadPointers();
-    // auto delayWData = delayBuffer.getArrayOfWritePointers();
-
-    if (isActive)
+    if (!context.isBypassed)
     {
-        int numInputSamplesNeeded = ceil (currentSpeed);
-
-        if (currentSpeed < 1)
-            numInputSamplesNeeded++;
-
-        //     if ()
-
-        for (int i = 0; i < ceil (1 / currentSpeed); ++i)
+        for (int sampleIndex = 0; sampleIndex < static_cast<int>(numSamples); ++sampleIndex)
         {
-            delayBuffer.setSample (0, writeHeadPos, sample);
-            writeHeadPos++;
+            m_delayLine.setDelay(m_time.getNextValue() * static_cast<int>(m_sampleRate));
 
-            if (writeHeadPos >= delayBufferSize)
-                writeHeadPos -= delayBufferSize;
+            const auto dryWet = m_dryWet.getNextValue();
+            auto       feedback = m_feedback.getNextValue();
+
+            for (int channelIndex = 0; channelIndex < static_cast<int>(numChannels); ++channelIndex)
+            {
+                const auto delayedSample = m_delayLine.popSample(channelIndex);
+
+                if (sampleIndex % static_cast<int>(m_delayLine.getDelay()) == 0)
+                {
+                    m_adsr.noteOn();
+                }
+                else if (sampleIndex >= static_cast<int>(m_sampleRate * (m_adsr.getParameters().decay + m_adsr.getParameters().attack)))
+                {
+                    m_adsr.noteOff();
+                }
+
+                // Add the delayed sample to the output block
+                outputBlock.addSample(channelIndex, sampleIndex, delayedSample * dryWet * feedback);
+
+                // Get the next sample
+                const auto nextSample = outputBlock.getSample(channelIndex, sampleIndex);
+
+                const auto envelopeSample = nextSample * m_adsr.getNextSample();
+
+                // Push the next sample to the delay line
+                m_delayLine.pushSample(channelIndex, envelopeSample);
+            }
         }
-
-        currentSpeed = speed;
+    }
+    else
+    {
+        outputBlock.copyFrom(inputBlock);
     }
 }
 
-float Delay::readSample()
+void Delay::updateParams()
 {
+    const auto currentDelayTime = m_params.getValue(ModDelay::ParamID::DelayTime);
+    assert(currentDelayTime <= Constants::maximumDelaySeconds);
+    m_time.setTargetValue(currentDelayTime);
+
+    const auto currentFeedback = m_params.getValue(ModDelay::ParamID::DelayFeedback);
+    m_feedback.setTargetValue(currentFeedback);
+
+    const auto currentDryWet = m_params.getValue(ModDelay::ParamID::DelayDryWet);
+    m_dryWet.setTargetValue(currentDryWet);
+
+    ADSR::Parameters adsrParameters;
+
+    adsrParameters.attack = m_params.getValue(ModDelay::ParamID::Attack);
+    adsrParameters.decay = m_params.getValue(ModDelay::ParamID::Decay);
+    adsrParameters.sustain = m_params.getValue(ModDelay::ParamID::Sustain);
+    adsrParameters.release = m_params.getValue(ModDelay::ParamID::Release);
+
+    m_adsr.setParameters(adsrParameters);
 }

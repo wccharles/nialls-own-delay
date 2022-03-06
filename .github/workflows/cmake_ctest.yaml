@@ -9,7 +9,7 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   DISPLAY: :0 # linux pluginval needs this
 
-# jobs are run in paralell on different machines
+# jobs are run in parallel on different machines
 # all steps run in series
 jobs:
   build_and_test:

@@ -1,51 +1,29 @@
 #pragma once
 
-#define MAX_BUFFER_SIZE 2
-
+#include "ParamsData.h"
 #include <JuceHeader.h>
 
 class Delay
 {
 public:
-    Delay (int channels, float fs) : chans (channels),
-                                     sampleRate (fs)
-    {
-        isActive        = false;
-        currentSpeed    = 1;
-        delayBufferSize = static_cast<int> (MAX_BUFFER_SIZE * sampleRate);
-        DBG ("Delay Buffer Size: " << delayBufferSize);
-        delayBuffer.setSize (chans, delayBufferSize);
-    }
+    Delay(ParamsData& params);
 
-    ~Delay() {}
+    void prepare(const dsp::ProcessSpec& spec);
+    void process(const dsp::ProcessContextReplacing<float>& context);
 
-    void  prepareToPlay (int readPointer);
-    void  delayParams (bool isActive, float delayTime);
-    void  writeSample (float sample);
-    float readSample();
-    void  reset();
+    void updateParams();
 
 private:
-    int   chans;
-    float sampleRate;
+    SmoothedValue<float> m_dryWet;
+    SmoothedValue<float> m_time;
+    SmoothedValue<float> m_feedback;
 
-    AudioSampleBuffer delayBuffer;
-    AudioSampleBuffer inputBuffer;
-    AudioSampleBuffer outputBuffer;
+    double m_sampleRate;
 
-    int delayBufferSize;
+    ADSR                  m_adsr;
+    dsp::DelayLine<float> m_delayLine;
 
-    int writeHeadPos { 0 };
-    int readHeadPos { 0 };
+    ParamsData& m_params;
 
-    float speed, currentSpeed, delayTime;
-
-    std::unique_ptr<LagrangeInterpolator> writeHead { nullptr };
-    std::unique_ptr<LagrangeInterpolator> readHead { nullptr };
-
-    bool isActive;
-
-    // ADSR adsr;
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Delay)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Delay)
 };

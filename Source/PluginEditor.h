@@ -8,20 +8,20 @@
 
 #pragma once
 
-#include <JuceHeader.h>
 #include "PluginProcessor.h"
+#include <JuceHeader.h>
 
 //==============================================================================
 /**
 */
-class ModDelayAudioProcessorEditor  : public AudioProcessorEditor
+class ModDelayAudioProcessorEditor : public AudioProcessorEditor
 {
 public:
-    ModDelayAudioProcessorEditor (ModDelayAudioProcessor&);
+    ModDelayAudioProcessorEditor(ModDelayAudioProcessor&);
     ~ModDelayAudioProcessorEditor() override;
 
     //==============================================================================
-    void paint (Graphics&) override;
+    void paint(Graphics&) override;
     void resized() override;
 
 private:
@@ -29,5 +29,5 @@ private:
     // access the processor object that created it.
     ModDelayAudioProcessor& audioProcessor;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ModDelayAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ModDelayAudioProcessorEditor)
 };

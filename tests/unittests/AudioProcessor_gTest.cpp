@@ -1,20 +1,20 @@
 #include "../../Source/PluginProcessor.h"
 #include <gtest/gtest.h>
 
-TEST (ExampleTest, CreatePluginAndGUITest)
+TEST(ExampleTest, CreatePluginAndGUITest)
 {
     juce::ScopedJuceInitialiser_GUI juceInitialiser;
-    auto messageManager = juce::MessageManager::getInstance();
+    auto                            messageManager = juce::MessageManager::getInstance();
     messageManager->setCurrentThreadAsMessageThread();
 
     auto pluginInstance = std::make_unique<ModDelayAudioProcessor>();
-    EXPECT_NE (pluginInstance, nullptr);
+    EXPECT_NE(pluginInstance, nullptr);
     auto gui = pluginInstance->createEditorIfNeeded();
-    EXPECT_NE (gui, nullptr);
+    EXPECT_NE(gui, nullptr);
 
-    messageManager->runDispatchLoopUntil (200);
+    messageManager->runDispatchLoopUntil(200);
 
-    pluginInstance->editorBeingDeleted (gui);
+    pluginInstance->editorBeingDeleted(gui);
     delete gui;
 
     pluginInstance.reset();

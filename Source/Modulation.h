@@ -2,39 +2,58 @@
 
 #include <JuceHeader.h>
 
-class Modulation {
+class Modulation
+{
 public:
-    Modulation(){
+    Modulation()
+    {
         // auto& random = Random::getSystemRandom();
     }
-    ~Modulation(){}
+    ~Modulation() {}
 
-    void modParams (float frequency, float sampleRate)
+    void modParams(float frequency, float sampleRate)
     {
         increment = 2 * M_PI * frequency / sampleRate;
     }
 
-    float processSample ()
+    void prepareToPlay(double sampleRate, int samplesPerBlock, int channels)
     {
-        float output = sinf(phase);
+        dsp::ProcessSpec spec;
+        spec.sampleRate = sampleRate;
+        spec.maximumBlockSize = samplesPerBlock;
+        spec.numChannels = channels;
 
-        phase += increment;
+        mod_osc.prepare(spec);
+        mod_osc.setFrequency(10);
+    }
 
-        if (phase > 2 * M_PI)
-            phase -= 2 * M_PI;
+    float processSample(float input)
+    {
+        // float output = sinf (phase);
 
-        float upper = output + 0.5 <= 1 ? output + 0.5 : 1;
-        float lower = output - 0.5 >= 0 ? output - 0.5 : 0;
+        // phase += increment;
 
-        auto noise = random.nextFloat ();
+        // if (phase > 2 * M_PI)
+        //     phase -= 2 * M_PI;
 
-        return output * noise;
+        // float upper = output + 0.5 <= 1 ? output + 0.5 : 1;
+        // float lower = output - 0.5 >= 0 ? output - 0.5 : 0;
+
+        auto noise = random.nextFloat();
+
+        auto output = mod_osc.processSample(input);
+
+        return output /* * noise */;
     }
 
 private:
-
     float phase;
     float increment;
+
+    dsp::Oscillator<float> mod_osc {
+        [](float x)
+        { return std::sin(x); }
+    };
 
     Random random;
 

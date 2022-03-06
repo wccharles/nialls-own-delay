@@ -50,7 +50,7 @@ juce_add_plugin(
   FORMATS
   Standalone
   VST3
-  VST2_CATEGORY
+  AUv3
   kPlugCategEffect
   VST3_CATEGORIES
   Delay
@@ -63,8 +63,6 @@ juce_add_plugin(
   Reverb
   Stereo
   Up-Downmix
-  VST_COPY_DIR
-  ${VST_DIR}
   VST3_COPY_DIR
   ${VST3_DIR}
   AU_COPY_DIR
@@ -75,14 +73,21 @@ juce_add_plugin(
   ${JUCE_PLUGIN_NAME}
   PLUGIN_NAME
   ${JUCE_PLUGIN_NAME}
+  BACKGROUND_AUDIO_ENABLED
+  TRUE
+  BACKGROUND_BLE_ENABLED
+  TRUE
   MICROPHONE_PERMISSION_ENABLED
   TRUE)
 
 juce_generate_juce_header(ModDelay)
 
 target_sources(
-  ModDelay PRIVATE Source/PluginProcessor.cpp Source/PluginEditor.cpp
-                   Source/Delay.cpp Source/Modulation.h)
+  ModDelay
+  PRIVATE Source/PluginProcessor.cpp Source/PluginEditor.cpp Source/Delay.cpp
+          Source/Modulation.h Source/Params/ParamsData.cpp)
+
+target_include_directories(ModDelay PRIVATE Source/Params)
 
 target_compile_definitions(
   ModDelay PUBLIC JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0

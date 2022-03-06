@@ -10,11 +10,12 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-ModDelayAudioProcessor::ModDelayAudioProcessor()
-#ifndef JucePlugin_PreferredChannelConfigurations
-     : AudioProcessor (BusesProperties().withInput  ("Input",  AudioChannelSet::stereo(), true)
-                                        .withOutput ("Output", AudioChannelSet::stereo(), true))
-#endif
+ModDelayAudioProcessor::ModDelayAudioProcessor() :
+    AudioProcessor(BusesProperties()
+                       .withInput("Input", AudioChannelSet::stereo(), true)
+                       .withOutput("Output", AudioChannelSet::stereo(), true)),
+    m_params(*this),
+    m_delay(m_params)
 {
 }
 
@@ -24,37 +25,52 @@ ModDelayAudioProcessor::~ModDelayAudioProcessor()
 
 //==============================================================================
 
-void ModDelayAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void ModDelayAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
-    // _delay = std::make_unique<Delay>(getTotalNumOutputChannels(), sampleRate);
-    // _delay->prepareToPlay(0);
-    // adsr.setSampleRate(sampleRate);
-    // adsr.setParameters({2.0f, 0.5f, 0.5, 0.1f});
+    juce::dsp::ProcessSpec spec;
+    spec.sampleRate = sampleRate;
+    spec.maximumBlockSize = static_cast<juce::uint32>(samplesPerBlock);
+    spec.numChannels = getTotalNumOutputChannels();
+
+    m_delay.prepare(spec);
+    m_delay.updateParams();
 }
 
 void ModDelayAudioProcessor::releaseResources()
 {
 }
 
-void ModDelayAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
+void ModDelayAudioProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
     ScopedNoDenormals noDenormals;
-    auto totalNumInputChannels  = getTotalNumInputChannels();
-    auto totalNumOutputChannels = getTotalNumOutputChannels();
+    auto              totalNumInputChannels = getTotalNumInputChannels();
+    auto              totalNumOutputChannels = getTotalNumOutputChannels();
 
-    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear (i, 0, buffer.getNumSamples());
+    juce::dsp::AudioBlock<float> block(buffer);
 
-    // _delay->process(buffer);
-    // adsr.setParameters({2.0f, 0.5f, 0.5, 0.5f});
-    // adsr.applyEnvelopeToBuffer(buffer, 0, buffer.getNumSamples());
+    int subBlockPosition = 0;
+
+    while (subBlockPosition < buffer.getNumSamples())
+    {
+        const auto                   subBlockSize = buffer.getNumSamples() - subBlockPosition;
+        juce::dsp::AudioBlock<float> subBlock = block.getSubBlock((size_t) subBlockPosition, static_cast<size_t>(subBlockSize));
+
+        juce::dsp::ProcessContextReplacing<float> context(subBlock);
+
+        m_delay.process(context);
+        m_delay.updateParams();
+
+        subBlockPosition += subBlockSize;
+    }
+
+    ignoreUnused(midiMessages);
 }
 
 //==============================================================================
 
 AudioProcessorEditor* ModDelayAudioProcessor::createEditor()
 {
-    return new ModDelayAudioProcessorEditor (*this);
+    return new ModDelayAudioProcessorEditor(*this);
 }
 
 //==============================================================================
