@@ -4,3 +4,6 @@
 [submodule "third-party/JUCE"]
 	path = third-party/JUCE
 	url = https://github.com/juce-framework/JUCE.git
+[submodule "third-party/react-juce"]
+	path = third-party/react-juce
+	url = https://github.com/wccharles/react-juce.git
