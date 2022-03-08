@@ -6,6 +6,7 @@ enable_testing()
 include(GoogleTest)
 
 add_subdirectory(third-party/JUCE)
+add_subdirectory(third-party/react-juce)
 
 if(APPLE)
   set(VST_DIR "$ENV{HOME}/Library/Audio/Plug-Ins/VST")
@@ -90,8 +91,9 @@ target_sources(
 target_include_directories(ModDelay PRIVATE Source/Params)
 
 target_compile_definitions(
-  ModDelay PUBLIC JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0
-                  JUCE_VST3_CAN_REPLACE_VST2=0 JUCER_ENABLE_GPL_MODE=1)
+  ModDelay
+  PUBLIC PLUGIN_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}" JUCE_WEB_BROWSER=0
+         JUCE_USE_CURL=0 JUCE_VST3_CAN_REPLACE_VST2=0 JUCER_ENABLE_GPL_MODE=1)
 
 set(JUCE_LINK_LIBRARIES
     juce::juce_audio_utils
@@ -100,7 +102,13 @@ set(JUCE_LINK_LIBRARIES
     juce::juce_graphics
     juce::juce_recommended_config_flags
     juce::juce_recommended_lto_flags
-    juce::juce_recommended_warning_flags)
+    juce::juce_recommended_warning_flags
+    juce::juce_audio_basics
+    juce::juce_audio_devices
+    juce::juce_audio_processors
+    juce::juce_graphics
+    juce::juce_gui_basics
+    react_juce)
 
 target_link_libraries(ModDelay PRIVATE ${JUCE_LINK_LIBRARIES})
 

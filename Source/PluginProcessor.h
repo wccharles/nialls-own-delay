@@ -17,7 +17,7 @@ using namespace juce;
 //==============================================================================
 /**
 */
-class ModDelayAudioProcessor : public AudioProcessor
+class ModDelayAudioProcessor : public AudioProcessor, private Timer
 {
 public:
     //==============================================================================
@@ -80,6 +80,8 @@ public:
 
     void getStateInformation(MemoryBlock& /*destData*/) override {}
     void setStateInformation(const void* /*data*/, int /*sizeInBytes*/) override {}
+
+    void timerCallback();
 
 private:
     //==============================================================================
