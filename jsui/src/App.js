@@ -68,8 +68,9 @@ class App extends Component {
     //const logo_svg = require('./logo.svg');
 
     return (
-     <View {...styles.container}>
-        <View {...styles.content}>
+      <View {...styles.container}>
+
+        <View {...styles.cell}>
           <ParameterSlider
             paramId="Gain"
             onDraw={Slider.drawRotary(sliderTrackColor, sliderFillColor)}
@@ -78,6 +79,10 @@ class App extends Component {
           >
             <Label paramId="Gain" {...styles.label} />
           </ParameterSlider>
+
+        </View>
+
+        <View {...styles.cell}>
 
           <ParameterSlider
             paramId="DelayDryWet"
@@ -104,8 +109,11 @@ class App extends Component {
             {...styles.knob}
           >
             <Label paramId="DelayFeedback" {...styles.label} />
-          </ParameterSlider>
+        </ParameterSlider>
 
+        </View>
+
+        <View {...styles.cell}>
           <ParameterSlider
             paramId="Attack"
             onDraw={Slider.drawRotary(sliderTrackColor, sliderFillColor)}
@@ -139,9 +147,9 @@ class App extends Component {
             mapDragGestureToValue={Slider.rotaryGestureMap}
             {...styles.knob}
           >
-            <Label paramId="Release" {...styles.label} />
+          <Label paramId="Release" {...styles.label} />
           </ParameterSlider>
-        </View>
+          </View>
       </View>
     );
   }
@@ -151,19 +159,10 @@ const styles = {
   container: {
     width: "100%",
     height: "100%",
-    backgroundColor:
-      "linear-gradient(45deg, hsla(225, 15%, 11%, 0.3), #17191f 50%)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  content: {
-    flex: 1.0,
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    padding: 24.0,
-    maxWidth: 600,
-    aspectRatio: 400.0 / 240.0,
+    backgroundColor: "#17191f",
+    justifyContent: "flex-start",
+    alignContent: "flex-start",
+    flexWrap: "wrap",
   },
   logo: {
     flex: 0.0,
@@ -173,15 +172,13 @@ const styles = {
   },
   knob: {
     flex: 1.0,
-    minWidth: 20.0,
-    minHeight: 20.0,
-    width: "55%",
-    height: "55%",
-    marginTop: 15,
-    marginHorizontal: "1%",
-    marginBottom: 6,
-    justifyContent: "flex-start",
-    alignContent: "flex-start"
+    minWidth: 80.0,
+    minHeight: 80.0,
+    width: "auto",
+    height: "auto",
+    margin: 6.0,
+    justifyContent: "space-around",
+    alignItems: "center",
 
   },
   label: {
@@ -213,10 +210,23 @@ const styles = {
     width: "20%",
     height: "17.5%",
   },
+  cell: {
+    flex: 1.0,
+    justifyContent: "center",
+    backgroundColor: "#87898f",
+    alignItems: "stretch",
+    margin: 6.0,
+    padding: 6.0,
+  },
   mute_button_text: {
     fontSize: 20.0,
     lineSpacing: 1.6,
     fontStyle: Text.FontStyleFlags.bold,
+  },
+  text: {
+    fontSize: 16.0,
+    lineSpacing: 1.6,
+    justification: Text.JustificationFlags.centredBottom,
   },
 };
 
