@@ -1,3 +1,6 @@
 [submodule "tests/googletest"]
 	path = tests/googletest
 	url = https://github.com/google/googletest.git
+[submodule "third-party/JUCE"]
+	path = third-party/JUCE
+	url = git@github.com:juce-framework/JUCE.git
