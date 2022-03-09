@@ -45,3 +45,14 @@ repos:
   rev: v13.0.0
   hooks:
   - id: clang-format
+
+-   repo: https://github.com/pre-commit/mirrors-eslint
+    rev: 'v7.9.0'  # Use the sha / tag you want to point at
+    hooks:
+    -   id: eslint
+        files: \.[jt]sx?$  # *.js, *.jsx, *.ts and *.tsx
+        types: [file]
+        additional_dependencies:
+          - eslint@8.10.0
+          - eslint-plugin-react@7.29.3
+          - eslint-webpack-plugin@3.1.1
