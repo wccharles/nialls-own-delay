@@ -29,11 +29,12 @@
   "scripts": {
     "start": "webpack -w --mode=development",
     "build": "webpack --mode=production",
-    "test": "cross-env NODE_ENV=lint webpack --mode=development"
+    "test": "cross-env NODE_ENV=lint webpack --mode=development",
+    "prepare": "cd .. && husky install"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run test"
+      "pre-commit": "npm test"
     }
   }
 }
