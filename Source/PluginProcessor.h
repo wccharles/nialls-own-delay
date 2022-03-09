@@ -90,7 +90,7 @@ private:
 
     Delay m_delay;
 
-    // ADSR adsr;
+    dsp::Gain<float> m_gain;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ModDelayAudioProcessor)
 };

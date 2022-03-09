@@ -31,10 +31,16 @@ void ModDelayAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBloc
     juce::dsp::ProcessSpec spec;
     spec.sampleRate = sampleRate;
     spec.maximumBlockSize = static_cast<juce::uint32>(samplesPerBlock);
-    spec.numChannels = getTotalNumOutputChannels();
+    spec.numChannels = static_cast<juce::uint32>(getTotalNumOutputChannels());
 
     m_delay.prepare(spec);
     m_delay.updateParams();
+
+    m_gain.reset();
+    m_gain.prepare(spec);
+    m_gain.setRampDurationSeconds(0.005);
+    const auto gainLinear = m_params.getValue(ModDelay::ParamID::Gain);
+    m_gain.setGainLinear(gainLinear);
 }
 
 void ModDelayAudioProcessor::releaseResources()
@@ -55,6 +61,9 @@ void ModDelayAudioProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer
 
     int subBlockPosition = 0;
 
+    const auto gainLinear = m_params.getValue(ModDelay::ParamID::Gain);
+    m_gain.setGainLinear(gainLinear);
+
     while (subBlockPosition < buffer.getNumSamples())
     {
         const auto                   subBlockSize = buffer.getNumSamples() - subBlockPosition;
@@ -62,6 +71,7 @@ void ModDelayAudioProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer
 
         juce::dsp::ProcessContextReplacing<float> context(subBlock);
 
+        m_gain.process(context);
         m_delay.process(context);
         m_delay.updateParams();
 
