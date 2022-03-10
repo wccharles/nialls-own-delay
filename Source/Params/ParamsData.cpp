@@ -13,9 +13,9 @@ ParamsData::ParamsData(juce::AudioProcessor& processor) :
 juce::AudioProcessorValueTreeState::ParameterLayout ParamsData::createAllParameters() const
 {
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
-    for (auto [id, range, defaultValue] : ModDelay::ParamTuples::floatParameterData)
+    for (auto [id, range, defaultValue, stringFromValue] : ModDelay::ParamTuples::floatParameterData)
     {
-        auto param = std::make_unique<juce::AudioParameterFloat>(id, id, range, defaultValue);
+        auto param = std::make_unique<juce::AudioParameterFloat>(id, id, range, defaultValue, String(), AudioProcessorParameter::genericParameter, stringFromValue);
         params.push_back(std::move(param));
     };
 
