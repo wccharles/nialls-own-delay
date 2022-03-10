@@ -1,5 +1,6 @@
 import AnimatedFlexBoxExample from "./AnimatedFlexBox";
 import Label from "./Label";
+import ParamLabel from "./ParamLabel";
 import Meter from "./Meter";
 import ParameterToggleButton from "./ParameterToggleButton";
 import ParameterSlider from "./ParameterSlider";
@@ -73,11 +74,12 @@ class App extends Component {
         <View {...styles.cell}>
           <ParameterSlider
             paramId="Gain"
-            onDraw={Slider.drawRotary(sliderTrackColor, sliderFillColor)}
-            mapDragGestureToValue={Slider.rotaryGestureMap}
+            onDraw={Slider.drawLinearVertical(sliderTrackColor, sliderFillColor)}
+            mapDragGestureToValue={Slider.linearVerticalGestureMap}
             {...styles.knob}
           >
             <Label paramId="Gain" {...styles.label} />
+            <ParamLabel paramId="Gain" {...styles.text} />
           </ParameterSlider>
 
         </View>
@@ -91,6 +93,7 @@ class App extends Component {
             {...styles.knob}
           >
             <Label paramId="DelayDryWet" {...styles.label} />
+            <ParamLabel paramId="DelayDryWet" {...styles.text} />
           </ParameterSlider>
 
           <ParameterSlider
@@ -100,6 +103,7 @@ class App extends Component {
             {...styles.knob}
           >
             <Label paramId="DelayTime" {...styles.label} />
+            <ParamLabel paramId="DelayTime" {...styles.text} />
           </ParameterSlider>
 
           <ParameterSlider
@@ -109,6 +113,7 @@ class App extends Component {
             {...styles.knob}
           >
             <Label paramId="DelayFeedback" {...styles.label} />
+            <ParamLabel paramId="DelayFeedback" {...styles.text} />
         </ParameterSlider>
 
         </View>
@@ -121,6 +126,7 @@ class App extends Component {
             {...styles.knob}
           >
             <Label paramId="Attack" {...styles.label} />
+            <ParamLabel paramId="Attack" {...styles.text} />
           </ParameterSlider>
 
           <ParameterSlider
@@ -130,6 +136,7 @@ class App extends Component {
             {...styles.knob}
           >
             <Label paramId="Decay" {...styles.label} />
+            <ParamLabel paramId="Decay" {...styles.text} />
           </ParameterSlider>
 
           <ParameterSlider
@@ -139,6 +146,7 @@ class App extends Component {
             {...styles.knob}
           >
             <Label paramId="Sustain" {...styles.label} />
+            <ParamLabel paramId="Sustain" {...styles.text} />
           </ParameterSlider>
 
           <ParameterSlider
@@ -147,7 +155,8 @@ class App extends Component {
             mapDragGestureToValue={Slider.rotaryGestureMap}
             {...styles.knob}
           >
-          <Label paramId="Release" {...styles.label} />
+            <Label paramId="Release" {...styles.label} />
+            <ParamLabel paramId="Release" {...styles.text} />
           </ParameterSlider>
           </View>
       </View>
@@ -172,10 +181,11 @@ const styles = {
   },
   knob: {
     flex: 1.0,
-    minWidth: 80.0,
-    minHeight: 80.0,
-    width: "auto",
-    height: "auto",
+    minWidth: 100.0,
+    minHeight: 100.0,
+    width: "80%",
+    height: "80%",
+    flexDirection: "column",
     margin: 6.0,
     justifyContent: "space-around",
     alignItems: "center",
@@ -183,8 +193,9 @@ const styles = {
   },
   label: {
     flex: 1.0,
-    justifyContent: "space-around",
+    justifyContent: "center",
     alignItems: "center",
+    marginTop: 6.0,
     interceptClickEvents: false,
   },
   meter: {
@@ -224,9 +235,12 @@ const styles = {
     fontStyle: Text.FontStyleFlags.bold,
   },
   text: {
+    flex: 1.0,
     fontSize: 16.0,
     lineSpacing: 1.6,
-    justification: Text.JustificationFlags.centredBottom,
+    marginTop: 6.0,
+    justifyContent: "flex-end",
+    // justification: Text.JustificationFlags.centredBottom,
   },
 };
 
