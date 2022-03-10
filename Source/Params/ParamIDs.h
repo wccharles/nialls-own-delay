@@ -22,17 +22,26 @@ namespace ModDelay
     namespace ParamTuples
     {
         // Tuple of parameter data goes: ID, Range, Default Value.
-        const std::vector<std::tuple<String, NormalisableRange<float>, float>> floatParameterData {
-            { ParamID::Gain, { 0.0f, 1.0f }, 0.75f },
+        const std::vector<std::tuple<String, NormalisableRange<float>, float, std::function<String(float, int)>>> floatParameterData {
 
-            { ParamID::DelayDryWet, { 0.0f, 1.0f }, 0.0f },
-            { ParamID::DelayTime, { 0.1f, 4.0f }, 0.25f },
-            { ParamID::DelayFeedback, { 0.0f, 1.0f }, 0.5f },
+            { ParamID::Gain, { 0.0f, 1.0f }, 0.75f, [](float value, int /* maxLength */)
+              { return String(Decibels::gainToDecibels(value), 1) + "dB"; } },
 
-            { ParamID::Attack, { 0.0f, 2.0f, 0.01f }, 1.0f },
-            { ParamID::Decay, { 0.0f, 1.0f }, 1.0f },
-            { ParamID::Sustain, { 0.0f, 1.0f }, 1.0f },
-            { ParamID::Release, { 0.0f, 2.0f, 0.01f }, 1.0f }
+            { ParamID::DelayDryWet, { 0.0f, 1.0f }, 0.0f, [](float value, int /* maxLength */)
+              { return String(value * 100.f, 1) + "%"; } },
+            { ParamID::DelayTime, { 0.1f, 4.0f }, 0.25f, [](float value, int /* maxLength */)
+              { return String(value, 1) + "s"; } },
+            { ParamID::DelayFeedback, { 0.0f, 1.0f }, 0.5f, [](float value, int /* maxLength */)
+              { return String(value * 100.f, 1) + "%"; } },
+
+            { ParamID::Attack, { 0.0f, 2.0f, 0.01f }, 1.0f, [](float value, int /* maxLength */)
+              { return String(value, 1) + "s"; } },
+            { ParamID::Decay, { 0.0f, 1.0f }, 1.0f, [](float value, int /* maxLength */)
+              { return String(value, 1) + "s"; } },
+            { ParamID::Sustain, { 0.0f, 1.0f }, 1.0f, [](float value, int /* maxLength */)
+              { return String(value, 1); } },
+            { ParamID::Release, { 0.0f, 2.0f, 0.01f }, 1.0f, [](float value, int /* maxLength */)
+              { return String(value, 1) + "s"; } }
         };
     }
 }
