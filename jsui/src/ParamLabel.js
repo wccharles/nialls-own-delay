@@ -8,7 +8,7 @@ class Label extends Component {
     this._onParameterValueChange = this._onParameterValueChange.bind(this);
 
     this.state = {
-      label: "",
+      paramlabel: "",
     };
   }
 
