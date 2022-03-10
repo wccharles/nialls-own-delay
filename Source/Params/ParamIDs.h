@@ -14,6 +14,9 @@ namespace ModDelay
 
         const String FreqShift = "FreqShift";
 
+        const String WowFactor = "WowFactor";
+        const String WowDepth = "WowDepth";
+
     } // namespace ParamID
 
     namespace ParamTuples
@@ -32,7 +35,12 @@ namespace ModDelay
               { return String(value * 100.f, 1) + "%"; } },
 
             { ParamID::FreqShift, { -12.0f, 12.0f, 2.0f }, 0.0f, [](float value, int /**/)
-              { return String(value); } }
+              { return String(value); } },
+
+            { ParamID::WowFactor, { 0.0f, 5.0f, 0.01f }, 0.5f, [](float value, int /**/)
+              { return String(value) + "Hz"; } },
+            { ParamID::WowDepth, { 0.0f, 1.0f }, 0.0f, [](float value, int /**/)
+              { return String(value, 2); } }
         };
     }
 }

@@ -5,55 +5,67 @@
 class Modulation
 {
 public:
-    Modulation()
+    static constexpr size_t lfoUpdateRate = 100;
+
+    Modulation() :
+        lfoUpdateCounter(lfoUpdateRate),
+        m_wowDelay(4.0f)
     {
         // auto& random = Random::getSystemRandom();
     }
     ~Modulation() {}
 
-    void modParams(float frequency, float sampleRate)
+    void prepare(const dsp::ProcessSpec& spec)
     {
-        increment = 2 * M_PI * frequency / sampleRate;
-    }
+        m_samplerate = spec.sampleRate;
 
-    void prepareToPlay(double sampleRate, int samplesPerBlock, int channels)
-    {
-        dsp::ProcessSpec spec;
-        spec.sampleRate = sampleRate;
-        spec.maximumBlockSize = samplesPerBlock;
-        spec.numChannels = channels;
+        m_wowFactor.reset(m_samplerate, 0.05f);
+        m_wowDepth.reset(m_samplerate, 0.05f);
 
         mod_osc.prepare(spec);
-        mod_osc.setFrequency(10);
+        mod_osc.setFrequency(m_wowFactor.getNextValue());
+
+        m_wowDelay.reset();
+        m_wowDelay.prepare(spec);
+        m_wowDelay.setMaximumDelayInSamples(0.25f * static_cast<float>(m_samplerate));
+        m_wowDelay.setDelay(0.0f);
     }
 
-    float processSample(float input)
+    void youveGotTheWowFactor(const float wowFactor, const float wowDepth)
     {
-        // float output = sinf (phase);
+        m_wowFactor.setTargetValue(wowFactor);
+        m_wowDepth.setTargetValue(wowDepth);
+    }
 
-        // phase += increment;
+    const float processSample(const float input, const int channel)
+    {
+        float output = 0.0f;
+        mod_osc.setFrequency(m_wowFactor.getNextValue());
+        lfoUpdateCounter = lfoUpdateRate;
+        const auto wowLFOOut = mod_osc.processSample(0.0f) * m_wowDepth.getNextValue();
+        auto       modulatedDelay = jlimit(0.0f, static_cast<float>(m_wowDelay.getMaximumDelayInSamples()), jmap(wowLFOOut, -1.0f, 1.0f, 0.0f, static_cast<float>(m_wowDelay.getMaximumDelayInSamples())));
 
-        // if (phase > 2 * M_PI)
-        //     phase -= 2 * M_PI;
+        m_wowDelay.pushSample(channel, input);
+        output = m_wowDelay.popSample(channel, modulatedDelay);
 
-        // float upper = output + 0.5 <= 1 ? output + 0.5 : 1;
-        // float lower = output - 0.5 >= 0 ? output - 0.5 : 0;
-
-        auto noise = random.nextFloat();
-
-        auto output = mod_osc.processSample(input);
-
-        return output /* * noise */;
+        return output;
     }
 
 private:
-    float phase;
-    float increment;
+    size_t lfoUpdateCounter;
 
     dsp::Oscillator<float> mod_osc {
         [](float x)
         { return std::sin(x); }
     };
+
+    dsp::DelayLine<float> m_wowDelay;
+    dsp::DelayLine<float> m_flutterDelay;
+
+    SmoothedValue<float> m_wowFactor;
+    SmoothedValue<float> m_wowDepth;
+
+    double m_samplerate;
 
     Random random;
 

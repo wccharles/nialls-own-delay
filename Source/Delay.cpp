@@ -32,6 +32,7 @@ void Delay::prepare(const dsp::ProcessSpec& spec)
     m_delayLine.setDelay(m_time.getCurrentValue() * static_cast<float>(m_sampleRate));
 
     stft.setup(m_sampleRate, spec.numChannels);
+    m_modulation.prepare(spec);
 }
 
 void Delay::process(const dsp::ProcessContextReplacing<float>& context)
@@ -60,7 +61,9 @@ void Delay::process(const dsp::ProcessContextReplacing<float>& context)
                 // Get the next sample
                 const auto nextSample = outputBlock.getSample(channelIndex, sampleIndex);
 
-                const auto freqShiftedSample = stft.processSample(nextSample, channelIndex);
+                const auto modulatedSample = m_modulation.processSample(nextSample, channelIndex);
+
+                const auto freqShiftedSample = stft.processSample(modulatedSample, channelIndex);
 
                 // Push the next sample to the delay line
                 m_delayLine.pushSample(channelIndex, freqShiftedSample);
@@ -88,4 +91,9 @@ void Delay::updateParams()
 
     const auto freqShift = m_params.getValue(ModDelay::ParamID::FreqShift);
     stft.updateParameters(freqShift);
+
+    const auto wowFactor = m_params.getValue(ModDelay::ParamID::WowFactor);
+    const auto wowDepth = m_params.getValue(ModDelay::ParamID::WowDepth);
+
+    m_modulation.youveGotTheWowFactor(wowFactor, wowDepth);
 }

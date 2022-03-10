@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Modulation.h"
 #include "ParamsData.h"
 #include "STFT.h"
 #include <JuceHeader.h>
@@ -21,6 +22,7 @@ private:
 
     double m_sampleRate;
 
+    Modulation            m_modulation;
     dsp::DelayLine<float> m_delayLine;
     STFT                  stft;
 
