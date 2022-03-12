@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ParamsData.h"
+#include "STFT.h"
 #include <JuceHeader.h>
 
 class Delay
@@ -22,6 +23,7 @@ private:
 
     ADSR                  m_adsr;
     dsp::DelayLine<float> m_delayLine;
+    STFT                  stft;
 
     ParamsData& m_params;
 

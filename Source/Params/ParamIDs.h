@@ -17,6 +17,8 @@ namespace ModDelay
         const String Sustain = "Sustain";
         const String Release = "Release";
 
+        const String FreqShift = "FreqShift";
+
     } // namespace ParamID
 
     namespace ParamTuples
@@ -41,7 +43,10 @@ namespace ModDelay
             { ParamID::Sustain, { 0.0f, 1.0f }, 1.0f, [](float value, int /* maxLength */)
               { return String(value, 1); } },
             { ParamID::Release, { 0.0f, 2.0f, 0.01f }, 1.0f, [](float value, int /* maxLength */)
-              { return String(value, 1) + "s"; } }
+              { return String(value, 1) + "s"; } },
+
+            { ParamID::FreqShift, { -12.0f, 12.0f, 2.0f }, 0.0f, [](float value, int /**/)
+              { return String(value); } }
         };
     }
 }
