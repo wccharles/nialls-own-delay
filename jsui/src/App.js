@@ -74,8 +74,8 @@ class App extends Component {
         <View {...styles.cell}>
           <ParameterSlider
             paramId="Gain"
-            onDraw={Slider.drawLinearVertical(sliderTrackColor, sliderFillColor)}
-            mapDragGestureToValue={Slider.linearVerticalGestureMap}
+            onDraw={Slider.drawRotary(sliderTrackColor, sliderFillColor)}
+            mapDragGestureToValue={Slider.rotaryGestureMap}
             {...styles.knob}
           >
             <Label paramId="Gain" {...styles.label} />
@@ -158,16 +158,19 @@ class App extends Component {
             <Label paramId="Release" {...styles.label} />
             <ParamLabel paramId="Release" {...styles.text} />
           </ParameterSlider>
-          </View>
+        </View>
 
+        <View {...styles.cell}>
           <ParameterSlider
             paramId="FreqShift"
             onDraw={Slider.drawLinearHorizontal(sliderTrackColor, sliderFillColor)}
             mapDragGestureToValue={Slider.linearHorizontalGestureMap}
-            {...styles.fader}
+            {...styles.faderH}
           >
             <Label paramId="FreqShift" {...styles.label} />
           </ParameterSlider>
+          {/* <ParamLabel paramId="FreqShift" {...styles.text} /> */}
+        </View>
       </View>
     );
   }
@@ -201,9 +204,8 @@ const styles = {
 
   },
   fader: {
-    flex: 1.0,
-    aspectRatio: 80.0 / 20.0,
-    width: "100%",
+    flex: 0.0,
+    width: "50%",
     justifyContent: "flex-start",
     alignContent: "flex-start",
     marginTop: 15,
@@ -244,7 +246,7 @@ const styles = {
     flex: 1.0,
     justifyContent: "center",
     backgroundColor: "#87898f",
-    alignItems: "stretch",
+    alignItems: "flex-start",
     margin: 6.0,
     padding: 6.0,
   },
