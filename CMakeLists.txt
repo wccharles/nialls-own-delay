@@ -86,7 +86,7 @@ juce_generate_juce_header(ModDelay)
 target_sources(
   ModDelay
   PRIVATE Source/PluginProcessor.cpp Source/PluginEditor.cpp Source/Delay.cpp
-          Source/Modulation.h Source/Params/ParamsData.cpp)
+          Source/STFT.cpp Source/Modulation.h Source/Params/ParamsData.cpp)
 
 target_include_directories(ModDelay PRIVATE Source/Params)
 

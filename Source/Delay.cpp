@@ -32,6 +32,8 @@ void Delay::prepare(const juce::dsp::ProcessSpec& spec)
     m_delayLine.reset();
     m_delayLine.prepare(spec);
     m_delayLine.setDelay(m_time.getCurrentValue() * static_cast<float>(m_sampleRate));
+
+    stft.setup(m_sampleRate, spec.numChannels);
 }
 
 void Delay::process(const juce::dsp::ProcessContextReplacing<float>& context)
@@ -69,11 +71,14 @@ void Delay::process(const juce::dsp::ProcessContextReplacing<float>& context)
                 // Get the next sample
                 const auto nextSample = outputBlock.getSample(channelIndex, sampleIndex);
 
-                const auto envelopeSample = nextSample * m_adsr.getNextSample();
+                const auto freqShiftedSample = stft.processSample(nextSample, channelIndex);
+
+                const auto envelopeSample = freqShiftedSample * m_adsr.getNextSample();
 
                 // Push the next sample to the delay line
                 m_delayLine.pushSample(channelIndex, envelopeSample);
             }
+            stft.updatePointers();
         }
     }
     else
@@ -102,4 +107,7 @@ void Delay::updateParams()
     adsrParameters.release = m_params.getValue(ModDelay::ParamID::Release);
 
     m_adsr.setParameters(adsrParameters);
+
+    const auto freqShift = m_params.getValue(ModDelay::ParamID::FreqShift);
+    stft.updateParameters(freqShift);
 }
