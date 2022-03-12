@@ -141,6 +141,15 @@ class App extends Component {
           >
             <Label paramId="Release" {...styles.label} />
           </ParameterSlider>
+
+          <ParameterSlider
+            paramId="FreqShift"
+            onDraw={Slider.drawLinearHorizontal(sliderTrackColor, sliderFillColor)}
+            mapDragGestureToValue={Slider.linearHorizontalGestureMap}
+            {...styles.fader}
+          >
+            <Label paramId="FreqShift" {...styles.label} />
+          </ParameterSlider>
         </View>
       </View>
     );
@@ -183,6 +192,16 @@ const styles = {
     justifyContent: "flex-start",
     alignContent: "flex-start"
 
+  },
+  fader: {
+    flex: 1.0,
+    aspectRatio: 80.0 / 20.0,
+    width: "100%",
+    justifyContent: "flex-start",
+    alignContent: "flex-start",
+    marginTop: 15,
+    marginHorizontal: "1%",
+    marginBottom: 6,
   },
   label: {
     flex: 1.0,
