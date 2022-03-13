@@ -12,11 +12,6 @@ namespace ModDelay
         const String DelayTime = "DelayTime";
         const String DelayFeedback = "DelayFeedback";
 
-        const String Attack = "Attack";
-        const String Decay = "Decay";
-        const String Sustain = "Sustain";
-        const String Release = "Release";
-
         const String FreqShift = "FreqShift";
 
     } // namespace ParamID
@@ -35,15 +30,6 @@ namespace ModDelay
               { return String(value * 1000.0f, 2) + "ms"; } },
             { ParamID::DelayFeedback, { 0.0f, 1.0f }, 0.5f, [](float value, int /* maxLength */)
               { return String(value * 100.f, 1) + "%"; } },
-
-            { ParamID::Attack, { 0.0f, 2.0f, 0.01f }, 1.0f, [](float value, int /* maxLength */)
-              { return String(value, 1) + "s"; } },
-            { ParamID::Decay, { 0.0f, 1.0f }, 1.0f, [](float value, int /* maxLength */)
-              { return String(value, 1) + "s"; } },
-            { ParamID::Sustain, { 0.0f, 1.0f }, 1.0f, [](float value, int /* maxLength */)
-              { return String(value, 1); } },
-            { ParamID::Release, { 0.0f, 2.0f, 0.01f }, 1.0f, [](float value, int /* maxLength */)
-              { return String(value, 1) + "s"; } },
 
             { ParamID::FreqShift, { -12.0f, 12.0f, 2.0f }, 0.0f, [](float value, int /**/)
               { return String(value); } }

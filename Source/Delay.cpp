@@ -19,8 +19,6 @@ Delay::Delay(ParamsData& params) :
 void Delay::prepare(const juce::dsp::ProcessSpec& spec)
 {
     m_sampleRate = spec.sampleRate;
-    m_adsr.setSampleRate(m_sampleRate);
-
     jassert(m_sampleRate <= Constants::maximumDelaySampleRate);
 
     m_dryWet.reset(m_sampleRate, Constants::smoothedValueRamp);
@@ -56,19 +54,8 @@ void Delay::process(const juce::dsp::ProcessContextReplacing<float>& context)
             {
                 const auto delayedSample = m_delayLine.popSample(channelIndex);
 
-                const auto envelopeSample = delayedSample * m_adsr.getNextSample();
-
-                if (sampleIndex % static_cast<int>(m_delayLine.getDelay()) == 0)
-                {
-                    m_adsr.noteOn();
-                }
-                else if (sampleIndex >= static_cast<int>(m_sampleRate * (m_adsr.getParameters().decay + m_adsr.getParameters().attack)))
-                {
-                    m_adsr.noteOff();
-                }
-
                 // Add the delayed sample to the output block
-                outputBlock.addSample(channelIndex, sampleIndex, envelopeSample * dryWet * feedback);
+                outputBlock.addSample(channelIndex, sampleIndex, delayedSample * dryWet * feedback);
 
                 // Get the next sample
                 const auto nextSample = outputBlock.getSample(channelIndex, sampleIndex);
@@ -98,15 +85,6 @@ void Delay::updateParams()
 
     const auto currentDryWet = m_params.getValue(ModDelay::ParamID::DelayDryWet);
     m_dryWet.setTargetValue(currentDryWet);
-
-    ADSR::Parameters adsrParameters;
-
-    adsrParameters.attack = m_params.getValue(ModDelay::ParamID::Attack);
-    adsrParameters.decay = m_params.getValue(ModDelay::ParamID::Decay);
-    adsrParameters.sustain = m_params.getValue(ModDelay::ParamID::Sustain);
-    adsrParameters.release = m_params.getValue(ModDelay::ParamID::Release);
-
-    m_adsr.setParameters(adsrParameters);
 
     const auto freqShift = m_params.getValue(ModDelay::ParamID::FreqShift);
     stft.updateParameters(freqShift);
