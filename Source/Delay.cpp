@@ -56,6 +56,8 @@ void Delay::process(const juce::dsp::ProcessContextReplacing<float>& context)
             {
                 const auto delayedSample = m_delayLine.popSample(channelIndex);
 
+                const auto envelopeSample = delayedSample * m_adsr.getNextSample();
+
                 if (sampleIndex % static_cast<int>(m_delayLine.getDelay()) == 0)
                 {
                     m_adsr.noteOn();
@@ -66,17 +68,15 @@ void Delay::process(const juce::dsp::ProcessContextReplacing<float>& context)
                 }
 
                 // Add the delayed sample to the output block
-                outputBlock.addSample(channelIndex, sampleIndex, delayedSample * dryWet * feedback);
+                outputBlock.addSample(channelIndex, sampleIndex, envelopeSample * dryWet * feedback);
 
                 // Get the next sample
                 const auto nextSample = outputBlock.getSample(channelIndex, sampleIndex);
 
                 const auto freqShiftedSample = stft.processSample(nextSample, channelIndex);
 
-                const auto envelopeSample = freqShiftedSample * m_adsr.getNextSample();
-
                 // Push the next sample to the delay line
-                m_delayLine.pushSample(channelIndex, envelopeSample);
+                m_delayLine.pushSample(channelIndex, freqShiftedSample);
             }
             stft.updatePointers();
         }
