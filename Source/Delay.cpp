@@ -10,13 +10,13 @@ namespace Constants
 }
 
 Delay::Delay(ParamsData& params) :
-    m_params(params),
     m_sampleRate(0.0),
-    m_delayLine(Constants::maximumDelaySamples)
+    m_delayLine(Constants::maximumDelaySamples),
+    m_params(params)
 {
 }
 
-void Delay::prepare(const juce::dsp::ProcessSpec& spec)
+void Delay::prepare(const dsp::ProcessSpec& spec)
 {
     m_sampleRate = spec.sampleRate;
     jassert(m_sampleRate <= Constants::maximumDelaySampleRate);
@@ -34,7 +34,7 @@ void Delay::prepare(const juce::dsp::ProcessSpec& spec)
     stft.setup(m_sampleRate, spec.numChannels);
 }
 
-void Delay::process(const juce::dsp::ProcessContextReplacing<float>& context)
+void Delay::process(const dsp::ProcessContextReplacing<float>& context)
 {
     const auto& inputBlock = context.getInputBlock();
     auto&       outputBlock = context.getOutputBlock();
