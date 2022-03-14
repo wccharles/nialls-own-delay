@@ -21,7 +21,6 @@ private:
 
     double m_sampleRate;
 
-    ADSR                  m_adsr;
     dsp::DelayLine<float> m_delayLine;
     STFT                  stft;
 

@@ -30,8 +30,8 @@ void ModDelayAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBloc
 {
     juce::dsp::ProcessSpec spec;
     spec.sampleRate = sampleRate;
-    spec.maximumBlockSize = static_cast<juce::uint32>(samplesPerBlock);
-    spec.numChannels = static_cast<juce::uint32>(getTotalNumOutputChannels());
+    spec.maximumBlockSize = static_cast<uint32>(samplesPerBlock);
+    spec.numChannels = static_cast<uint32>(getTotalNumOutputChannels());
 
     m_delay.prepare(spec);
     m_delay.updateParams();
@@ -54,10 +54,8 @@ void ModDelayAudioProcessor::timerCallback()
 void ModDelayAudioProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
     ScopedNoDenormals noDenormals;
-    auto              totalNumInputChannels = getTotalNumInputChannels();
-    auto              totalNumOutputChannels = getTotalNumOutputChannels();
 
-    juce::dsp::AudioBlock<float> block(buffer);
+    dsp::AudioBlock<float> block(buffer);
 
     int subBlockPosition = 0;
 

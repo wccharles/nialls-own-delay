@@ -120,48 +120,6 @@ class App extends Component {
 
         <View {...styles.cell}>
           <ParameterSlider
-            paramId="Attack"
-            onDraw={Slider.drawRotary(sliderTrackColor, sliderFillColor)}
-            mapDragGestureToValue={Slider.rotaryGestureMap}
-            {...styles.knob}
-          >
-            <Label paramId="Attack" {...styles.label} />
-            <ParamLabel paramId="Attack" {...styles.text} />
-          </ParameterSlider>
-
-          <ParameterSlider
-            paramId="Decay"
-            onDraw={Slider.drawRotary(sliderTrackColor, sliderFillColor)}
-            mapDragGestureToValue={Slider.rotaryGestureMap}
-            {...styles.knob}
-          >
-            <Label paramId="Decay" {...styles.label} />
-            <ParamLabel paramId="Decay" {...styles.text} />
-          </ParameterSlider>
-
-          <ParameterSlider
-            paramId="Sustain"
-            onDraw={Slider.drawRotary(sliderTrackColor, sliderFillColor)}
-            mapDragGestureToValue={Slider.rotaryGestureMap}
-            {...styles.knob}
-          >
-            <Label paramId="Sustain" {...styles.label} />
-            <ParamLabel paramId="Sustain" {...styles.text} />
-          </ParameterSlider>
-
-          <ParameterSlider
-            paramId="Release"
-            onDraw={Slider.drawRotary(sliderTrackColor, sliderFillColor)}
-            mapDragGestureToValue={Slider.rotaryGestureMap}
-            {...styles.knob}
-          >
-            <Label paramId="Release" {...styles.label} />
-            <ParamLabel paramId="Release" {...styles.text} />
-          </ParameterSlider>
-        </View>
-
-        <View {...styles.cell}>
-          <ParameterSlider
             paramId="FreqShift"
             onDraw={Slider.drawLinearHorizontal(sliderTrackColor, sliderFillColor)}
             mapDragGestureToValue={Slider.linearHorizontalGestureMap}
