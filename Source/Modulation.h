@@ -5,13 +5,8 @@
 class Modulation
 {
 public:
-    static constexpr size_t lfoUpdateRate = 100;
-
     Modulation() :
-        lfoUpdateCounter(lfoUpdateRate),
-        m_wowDelay(4.0f)
     {
-        // auto& random = Random::getSystemRandom();
     }
     ~Modulation() {}
 
@@ -41,7 +36,6 @@ public:
     {
         float output = 0.0f;
         mod_osc.setFrequency(m_wowFactor.getNextValue());
-        lfoUpdateCounter = lfoUpdateRate;
         const auto wowLFOOut = mod_osc.processSample(0.0f) * m_wowDepth.getNextValue();
         auto       modulatedDelay = jlimit(0.0f, static_cast<float>(m_wowDelay.getMaximumDelayInSamples()), jmap(wowLFOOut, -1.0f, 1.0f, 0.0f, static_cast<float>(m_wowDelay.getMaximumDelayInSamples())));
 
@@ -52,8 +46,6 @@ public:
     }
 
 private:
-    size_t lfoUpdateCounter;
-
     dsp::Oscillator<float> mod_osc {
         [](float x)
         { return std::sin(x); }
