@@ -5,7 +5,7 @@
 class Modulation
 {
 public:
-    Modulation() :
+    Modulation()
     {
     }
     ~Modulation() {}
