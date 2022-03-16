@@ -9,6 +9,7 @@ namespace Constants
     constexpr auto maximumDelaySamples = static_cast<int>(maximumDelaySeconds * maximumDelaySampleRate);
 }
 
+using namespace std::placeholders;
 Delay::Delay(ParamsData& params) :
     m_filterType(0),
     m_prePostFilterChoice(0),
@@ -20,8 +21,8 @@ Delay::Delay(ParamsData& params) :
     return input; }),
     filterProcess([this](const float input, const int channel)
                   { return m_filterDrive.processSample(m_filter.processSample(channel, input)); }),
-    stftProcess(std::bind(&STFT::processSample, &this->stft, _1, _2)),
     modulationProcess(std::bind(&Modulation::processSample, &this->m_modulation, _1, _2)),
+    stftProcess(std::bind(&STFT::processSample, &this->m_stft, _1, _2)),
     m_params(params)
 {
 }
@@ -51,7 +52,7 @@ void Delay::prepare(const dsp::ProcessSpec& spec)
     m_filter.setCutoffFrequency(m_cutoffFrequency.getNextValue());
     m_filter.setResonance(m_resonance.getCurrentValue());
 
-    stft.setup(m_sampleRate, spec.numChannels);
+    m_stft.setup(m_sampleRate, spec.numChannels);
     m_modulation.prepare(spec);
 }
 
@@ -96,14 +97,14 @@ void Delay::process(const dsp::ProcessContextReplacing<float>& context)
                 // Get the next sample
                 const auto nextSample = outputBlock.getSample(channelIndex, sampleIndex);
 
-                const auto modulatedSample = m_modulation.processSample(nextSample, channelIndex);
+                const auto modulatedSample = connectEffects(nextSample, channelIndex, modulationProcess);
 
-                const auto freqShiftedSample = stft.processSample(modulatedSample, channelIndex);
+                const auto freqShiftedSample = connectEffects(modulatedSample, channelIndex, stftProcess);
 
                 // Push the next sample to the delay line
                 m_delayLine.pushSample(channelIndex, freqShiftedSample);
             }
-            stft.updatePointers();
+            m_stft.updatePointers();
         }
         m_filter.snapToZero();
     }
@@ -134,17 +135,22 @@ void Delay::updateParams()
     const auto currentFreqResonance = m_params.getValue(ModDelay::ParamID::FrequencyResonance);
     m_resonance.setTargetValue(currentFreqResonance);
 
-    const auto freqShift = m_params.getValue(ModDelay::ParamID::FreqShift);
-    stft.updateParameters(freqShift);
+    const auto currentFreqShift = m_params.getValue(ModDelay::ParamID::FreqShift);
+    m_stft.updateParameters(currentFreqShift);
 
-    const auto wowFactor = m_params.getValue(ModDelay::ParamID::WowFactor);
-    const auto wowDepth = m_params.getValue(ModDelay::ParamID::WowDepth);
+    const auto currentWowFactor = m_params.getValue(ModDelay::ParamID::WowFactor);
+    const auto currentWowDepth = m_params.getValue(ModDelay::ParamID::WowDepth);
 
-    m_modulation.youveGotTheWowFactor(wowFactor, wowDepth);
+    m_modulation.youveGotTheWowFactor(currentWowFactor, currentWowDepth);
 
-    const auto prePostFilterChoice = m_params.getChoiceValue(ModDelay::ParamID::PrePostFilter);
-    m_prePostFilterChoice.set(prePostFilterChoice);
+    const auto currentPrePostFilter = m_params.getChoiceValue(ModDelay::ParamID::PrePostFilter);
+    m_prePostFilterChoice.set(currentPrePostFilter);
 
-    const auto filterType = m_params.getChoiceValue(ModDelay::ParamID::FilterType);
-    m_filterType = filterType;
+    const auto currentFilterType = m_params.getChoiceValue(ModDelay::ParamID::FilterType);
+    m_filterType = currentFilterType;
+}
+
+const float Delay::connectEffects(const float input, const int channel, const std::function<const float(const float, const int)> processSample)
+{
+    return processSample(input, channel);
 }

@@ -16,6 +16,9 @@ public:
     void updateParams();
 
 private:
+    const float connectEffects(const float input, const int channel, const std::function<const float(const float, const int)> processSample);
+
+private:
     SmoothedValue<float> m_dryWet;
     SmoothedValue<float> m_time;
     SmoothedValue<float> m_feedback;
@@ -28,15 +31,15 @@ private:
 
     double m_sampleRate;
 
-    Modulation                         m_modulation;
     dsp::DelayLine<float>              m_delayLine;
-    STFT                               stft;
     dsp::StateVariableTPTFilter<float> m_filter;
+    Modulation                         m_modulation;
+    STFT                               m_stft;
 
     std::function<const float(const float, const int)> bypassProcess;
     std::function<const float(const float, const int)> filterProcess;
-    std::function<const float(const float, const int)> stftProcess;
     std::function<const float(const float, const int)> modulationProcess;
+    std::function<const float(const float, const int)> stftProcess;
 
     ParamsData& m_params;
 
