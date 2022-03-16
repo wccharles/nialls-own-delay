@@ -20,11 +20,23 @@ private:
     SmoothedValue<float> m_time;
     SmoothedValue<float> m_feedback;
 
+    dsp::Gain<float>     m_filterDrive;
+    SmoothedValue<float> m_cutoffFrequency;
+    SmoothedValue<float> m_resonance;
+    int                  m_filterType;
+    Atomic<int>          m_prePostFilterChoice;
+
     double m_sampleRate;
 
-    Modulation            m_modulation;
-    dsp::DelayLine<float> m_delayLine;
-    STFT                  stft;
+    Modulation                         m_modulation;
+    dsp::DelayLine<float>              m_delayLine;
+    STFT                               stft;
+    dsp::StateVariableTPTFilter<float> m_filter;
+
+    std::function<const float(const float, const int)> bypassProcess;
+    std::function<const float(const float, const int)> filterProcess;
+    std::function<const float(const float, const int)> stftProcess;
+    std::function<const float(const float, const int)> modulationProcess;
 
     ParamsData& m_params;
 

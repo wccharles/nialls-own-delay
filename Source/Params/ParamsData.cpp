@@ -17,7 +17,13 @@ juce::AudioProcessorValueTreeState::ParameterLayout ParamsData::createAllParamet
     {
         auto param = std::make_unique<juce::AudioParameterFloat>(id, id, range, defaultValue, String(), AudioProcessorParameter::genericParameter, stringFromValue);
         params.push_back(std::move(param));
-    };
+    }
+
+    for (auto [id, options, dafaultIndex] : ModDelay::ParamTuples::choiceParameterData)
+    {
+        auto param = std::make_unique<juce::AudioParameterChoice>(id, id, options, dafaultIndex);
+        params.push_back(std::move(param));
+    }
 
     return { params.begin(), params.end() };
 }
@@ -34,4 +40,13 @@ float ParamsData::getValue(juce::String parameterID) const
 
     const float paramValue = rawParamValue ? rawParamValue->load() : 0.0f;
     return paramValue;
+}
+
+int ParamsData::getChoiceValue(String parameterID) const
+{
+    const auto choice = dynamic_cast<AudioParameterChoice*>(m_valueTreeState.getParameter(parameterID));
+
+    jassert(choice);
+
+    return choice->getIndex();
 }

@@ -11,6 +11,7 @@ public:
     juce::AudioProcessorValueTreeState& getAPVTS();
 
     float getValue(juce::String parameterID) const;
+    int   getChoiceValue(String parameterID) const;
 
 private:
     juce::AudioProcessorValueTreeState::ParameterLayout createAllParameters() const;
