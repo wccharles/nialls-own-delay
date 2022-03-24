@@ -91,6 +91,7 @@ target_sources(
           Source/PluginEditor.cpp
           Source/Delay.h
           Source/Delay.cpp
+          Source/StereoProcessor.h
           Source/STFT.h
           Source/STFT.cpp
           Source/Modulation.h

@@ -10,6 +10,7 @@
 
 #include "Delay.h"
 #include "ParamsData.h"
+#include "StereoProcessor.h"
 #include <juce_audio_processors/juce_audio_processors.h>
 
 using namespace juce;
@@ -88,7 +89,8 @@ private:
 
     ParamsData m_params;
 
-    Delay m_delay;
+    Delay           m_delay;
+    StereoProcessor m_stereoProcessor;
 
     dsp::Gain<float> m_gain;
 

@@ -8,6 +8,8 @@ namespace ModDelay
     {
         const String Gain = "Gain";
 
+        const String StereoWidth = "StereoWidth";
+
         const String DelayDryWet = "DelayDryWet";
         const String DelayTime = "DelayTime";
         const String DelayFeedback = "DelayFeedback";
@@ -37,6 +39,11 @@ namespace ModDelay
             { ParamID::Gain, { 0.0f, 1.0f }, 0.75f, [](float value, int /* maxLength */)
               { return String(Decibels::gainToDecibels(value), 1) + "dB"; } },
 
+            { ParamID::StereoWidth, { Decibels::gainToDecibels(0.5f), Decibels::gainToDecibels(2.0f) }, 0.0f, [](float value, int /* maxLength */)
+              {
+                  return String(Decibels::decibelsToGain(value) * 100.f, 1) + "%";
+              } },
+
             { ParamID::DelayDryWet, { 0.0f, 1.0f }, 0.0f, [](float value, int /* maxLength */)
               { return String(value * 100.f, 1) + "%"; } },
             { ParamID::DelayTime, { 0.01f, 1.0f, 0.00001f }, 0.25f, [](float value, int /* maxLength */)
@@ -46,10 +53,7 @@ namespace ModDelay
 
             { ParamID::FilterDrive, { 0.5f, 2.0f }, 1.0f, [](float value, int /* maxLength */)
               { return String(Decibels::gainToDecibels(value), 1) + "dB"; } },
-            { ParamID::FrequencyCutoff,
-              { 20.0f, 20000.0f, 0.0f, 0.3f },
-              20000.0f,
-              [](float value, int /* maxLength */)
+            { ParamID::FrequencyCutoff, { 20.0f, 20000.0f, 0.0f, 0.3f }, 20000.0f, [](float value, int /* maxLength */)
               { if (value >= 1000.0f) return String(value / 1000.0f, 1) + "kHz"; else return String(value) + "Hz"; } },
 
             { ParamID::FrequencyResonance, { 0.01f, 10.0f, 0.01f }, 0.7f, [](float value, int /* maxLength */)
