@@ -52,7 +52,7 @@ void Delay::prepare(const dsp::ProcessSpec& spec)
     m_filter.setCutoffFrequency(m_cutoffFrequency.getNextValue());
     m_filter.setResonance(m_resonance.getCurrentValue());
 
-    m_stft.setup(m_sampleRate, spec.numChannels);
+    m_stft.setup(m_sampleRate, static_cast<int>(spec.numChannels));
     m_modulation.prepare(spec);
 }
 
