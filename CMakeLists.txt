@@ -2,6 +2,15 @@ cmake_minimum_required(VERSION 3.15)
 project(ModDelay VERSION 1.0.0)
 set(JUCE_PLUGIN_NAME "Modulation Delay")
 
+# By default we don't want Xcode schemes to be made for modules, etc
+set(CMAKE_XCODE_GENERATE_SCHEME OFF)
+
+set_property(GLOBAL PROPERTY USE_FOLDERS YES)
+
+# Create a /Modules directory in the IDE with the JUCE Module code
+option(JUCE_ENABLE_MODULE_SOURCE_GROUPS
+       "Show all module sources in IDE projects" ON)
+
 enable_testing()
 include(GoogleTest)
 
@@ -81,24 +90,75 @@ juce_add_plugin(
   MICROPHONE_PERMISSION_ENABLED
   TRUE)
 
+# C++17 please
+target_compile_features(ModDelay PRIVATE cxx_std_17)
+
+if(MSVC)
+  target_compile_options(ModDelay PRIVATE /W3 /WX)
+else()
+  target_compile_options(ModDelay PRIVATE -Wall -Werror)
+endif()
+
+if(NOT XCODE)
+  set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-fsanitize=thread")
+endif()
+
 juce_generate_juce_header(ModDelay)
 
-target_sources(
-  ModDelay
-  PRIVATE Source/PluginProcessor.h
-          Source/PluginProcessor.cpp
-          Source/PluginEditor.h
-          Source/PluginEditor.cpp
-          Source/Delay.h
-          Source/Delay.cpp
-          Source/StereoProcessor.h
-          Source/STFT.h
-          Source/STFT.cpp
-          Source/Modulation.h
-          Source/Params/ParamsData.h
-          Source/Params/ParamsData.cpp)
+set(PLUGIN_SOURCES
+    ${CMAKE_SOURCE_DIR}/Source/PluginProcessor.h
+    ${CMAKE_SOURCE_DIR}/Source/PluginProcessor.cpp
+    ${CMAKE_SOURCE_DIR}/Source/PluginEditor.h
+    ${CMAKE_SOURCE_DIR}/Source/PluginEditor.cpp
+    ${CMAKE_SOURCE_DIR}/Source/Delay.h
+    ${CMAKE_SOURCE_DIR}/Source/Delay.cpp
+    ${CMAKE_SOURCE_DIR}/Source/StereoProcessor.h
+    ${CMAKE_SOURCE_DIR}/Source/STFT.h
+    ${CMAKE_SOURCE_DIR}/Source/STFT.cpp
+    ${CMAKE_SOURCE_DIR}/Source/Modulation.h
+    ${CMAKE_SOURCE_DIR}/Source/Params/ParamsData.h
+    ${CMAKE_SOURCE_DIR}/Source/Params/ParamsData.cpp)
 
-target_include_directories(ModDelay PRIVATE Source/Params)
+target_sources(ModDelay PRIVATE ${PLUGIN_SOURCES})
+
+set(PLUGIN_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/Source
+                        ${CMAKE_SOURCE_DIR}/Source/Params)
+
+target_include_directories(ModDelay PRIVATE ${PLUGIN_INCLUDE_DIRS})
+
+# No, we don't want our source buried in extra nested folders
+set_target_properties("${PROJECT_NAME}" PROPERTIES FOLDER "")
+
+# The Xcode source tree should uhhh, still look like the source tree, yo
+source_group(
+  TREE ${CMAKE_CURRENT_SOURCE_DIR}/Source
+  PREFIX ""
+  FILES ${PLUGIN_SOURCES})
+
+# This cleans up the folder organization on Xcode. It tucks the Plugin varieties
+# into a "Targets" folder and generate an Xcode Scheme manually Xcode scheme
+# generation is turned off globally to limit noise from other targets The
+# non-hacky way of doing this is via the global PREDEFINED_TARGETS_FOLDER
+# property However that doesn't seem to be working in Xcode Not all plugin types
+# (au, vst) available on each build type (win, macos, linux)
+foreach(target ${FORMATS} "All")
+  if(TARGET ModDelay_${target})
+    set_target_properties(
+      ModDelay_${target}
+      PROPERTIES
+        # Tuck the actual plugin targets into a folder where they won't bother
+        # us
+        FOLDER "Targets"
+        # MacOS only: Sets the default executable that Xcode will open on build
+        # For this exact path to to work, manually build the
+        # AudioPluginHost.xcodeproj in the JUCE subdir
+        # XCODE_SCHEME_EXECUTABLE
+        # "${CMAKE_CURRENT_SOURCE_DIR}/JUCE/extras/AudioPluginHost/Builds/MacOSX/build/Debug/AudioPluginHost.app"
+        # Let us build the target in Xcode
+        XCODE_GENERATE_SCHEME ON
+        XCODE_SCHEME_THREAD_SANITIZER ON)
+  endif()
+endforeach()
 
 target_compile_definitions(
   ModDelay
