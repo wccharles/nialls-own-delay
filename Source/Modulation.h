@@ -22,7 +22,7 @@ public:
 
         m_wowDelay.reset();
         m_wowDelay.prepare(spec);
-        m_wowDelay.setMaximumDelayInSamples(0.25f * static_cast<float>(m_samplerate));
+        m_wowDelay.setMaximumDelayInSamples(static_cast<int>(0.25f * m_samplerate));
         m_wowDelay.setDelay(0.0f);
     }
 

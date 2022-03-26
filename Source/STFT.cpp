@@ -1,7 +1,7 @@
 #include "STFT.h"
 
 STFT::STFT() :
-    m_fft(log2(fftSize)),
+    m_fft((int) log2(fftSize)),
     m_freqShift(0.0)
 {
 }
@@ -90,7 +90,7 @@ void STFT::updateWindow()
 {
     for (int sample = 0; sample < fftSize; ++sample)
     {
-        fftWindow[sample] = 0.5f - 0.5f * cosf(2.0f * M_PI * (float) sample / (float) (fftSize - 1));
+        fftWindow[sample] = 0.5f - 0.5f * cosf(2.0f * (float) M_PI * (float) sample / (float) (fftSize - 1));
     }
 
     float windowSum = 0.0f;
