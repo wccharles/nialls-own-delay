@@ -17,6 +17,8 @@ include(GoogleTest)
 add_subdirectory(third-party/JUCE)
 add_subdirectory(third-party/react-juce)
 
+set(FORMATS AUv3 VST3 Standalone)
+
 if(APPLE)
   set(VST_DIR "$ENV{HOME}/Library/Audio/Plug-Ins/VST")
   set(VST3_DIR "$ENV{HOME}/Library/Audio/Plug-Ins/VST3")
@@ -58,9 +60,7 @@ juce_add_plugin(
   PLUGIN_CODE
   WC1M
   FORMATS
-  Standalone
-  VST3
-  AUv3
+  ${FORMATS}
   kPlugCategEffect
   VST3_CATEGORIES
   Delay

@@ -25,4 +25,13 @@ target_include_directories(unit_tests PRIVATE ${TEST_INCLUDE_DIRS})
 target_link_libraries(unit_tests PRIVATE ${TEST_LINK_LIBRARIES}
                                          ${JUCE_LINK_LIBRARIES} ModDelay)
 
+# Make an Xcode Scheme for the test executable so we can run tests in the IDE
+set_target_properties(unit_tests PROPERTIES XCODE_GENERATE_SCHEME ON)
+
+# Organize the test source in the Tests/ folder in the IDE
+source_group(
+  TREE ${CMAKE_CURRENT_SOURCE_DIR}/unittests
+  PREFIX ""
+  FILES ${TEST_FILES})
+
 gtest_discover_tests(unit_tests)
