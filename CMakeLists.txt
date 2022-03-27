@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.15)
 project(ModDelay VERSION 1.0.0)
 set(JUCE_PLUGIN_NAME "Modulation Delay")
 
+if(APPLE)
+  set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13")
+endif()
+
 # By default we don't want Xcode schemes to be made for modules, etc
 set(CMAKE_XCODE_GENERATE_SCHEME OFF)
 
