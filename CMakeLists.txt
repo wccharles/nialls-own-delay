@@ -60,9 +60,9 @@ juce_add_plugin(
   COPY_PLUGIN_AFTER_BUILD
   TRUE
   PLUGIN_MANUFACTURER_CODE
-  ModD
+  WCCh
   PLUGIN_CODE
-  WC1M
+  WC01
   FORMATS
   ${FORMATS}
   kPlugCategEffect
