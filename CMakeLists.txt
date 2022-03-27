@@ -21,7 +21,7 @@ include(GoogleTest)
 add_subdirectory(third-party/JUCE)
 add_subdirectory(third-party/react-juce)
 
-set(FORMATS AUv3 VST3 Standalone)
+set(PLUG_FORMATS AUv3 VST3 Standalone)
 
 if(APPLE)
   set(VST_DIR "$ENV{HOME}/Library/Audio/Plug-Ins/VST")
@@ -64,7 +64,7 @@ juce_add_plugin(
   PLUGIN_CODE
   WC01
   FORMATS
-  ${FORMATS}
+  ${PLUG_FORMATS}
   kPlugCategEffect
   VST3_CATEGORIES
   Delay
@@ -145,7 +145,7 @@ source_group(
 # non-hacky way of doing this is via the global PREDEFINED_TARGETS_FOLDER
 # property However that doesn't seem to be working in Xcode Not all plugin types
 # (au, vst) available on each build type (win, macos, linux)
-foreach(target ${FORMATS} "All")
+foreach(target ${PLUG_FORMATS} "All")
   if(TARGET ModDelay_${target})
     set_target_properties(
       ModDelay_${target}
