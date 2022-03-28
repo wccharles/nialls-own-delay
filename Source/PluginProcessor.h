@@ -19,7 +19,7 @@ using namespace juce;
 //==============================================================================
 /**
 */
-class ModDelayAudioProcessor : public AudioProcessor, private Timer
+class ModDelayAudioProcessor : public AudioProcessor
 {
 public:
     //==============================================================================
@@ -40,7 +40,7 @@ public:
     AudioProcessorEditor* createEditor() override;
     bool                  hasEditor() const override
     {
-        return true;
+        return false;
     }
 
     const String getName() const override
@@ -82,8 +82,6 @@ public:
 
     void getStateInformation(MemoryBlock& /*destData*/) override {}
     void setStateInformation(const void* /*data*/, int /*sizeInBytes*/) override {}
-
-    void timerCallback() override;
 
 private:
     //==============================================================================

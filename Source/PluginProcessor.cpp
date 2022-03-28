@@ -22,7 +22,6 @@ ModDelayAudioProcessor::ModDelayAudioProcessor() :
 
 ModDelayAudioProcessor::~ModDelayAudioProcessor()
 {
-    stopTimer();
 }
 
 //==============================================================================
@@ -52,10 +51,6 @@ void ModDelayAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBloc
 }
 
 void ModDelayAudioProcessor::releaseResources()
-{
-}
-
-void ModDelayAudioProcessor::timerCallback()
 {
 }
 
@@ -97,20 +92,7 @@ void ModDelayAudioProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer
 
 AudioProcessorEditor* ModDelayAudioProcessor::createEditor()
 {
-    File sourceDir = File(PLUGIN_SOURCE_DIR);
-    File bundle = sourceDir.getChildFile("jsui/build/js/main.js");
-
-    auto* editor = new reactjuce::GenericEditor(*this, bundle);
-
-    editor->setResizable(true, true);
-    editor->setResizeLimits(400, 358, 400 * 2, 358 * 2);
-    editor->getConstrainer()->setFixedAspectRatio(400.0 / 358.0);
-    editor->setSize(400, 358);
-
-    // Start timer to dispatch gainPeakValues event to update Meter values
-    startTimer(100);
-
-    return editor;
+    return nullptr;
 }
 
 //==============================================================================
