@@ -15,9 +15,6 @@ set_property(GLOBAL PROPERTY USE_FOLDERS YES)
 option(JUCE_ENABLE_MODULE_SOURCE_GROUPS
        "Show all module sources in IDE projects" ON)
 
-enable_testing()
-include(GoogleTest)
-
 add_subdirectory(third-party/JUCE)
 add_subdirectory(third-party/react-juce)
 
@@ -170,20 +167,17 @@ target_compile_definitions(
                   JUCE_VST3_CAN_REPLACE_VST2=0 JUCER_ENABLE_GPL_MODE=1)
 
 set(JUCE_LINK_LIBRARIES
+    juce::juce_audio_basics
+    juce::juce_audio_devices
+    juce::juce_audio_processors
     juce::juce_audio_utils
     juce::juce_core
     juce::juce_dsp
     juce::juce_graphics
+    juce::juce_gui_basics
     juce::juce_recommended_config_flags
     juce::juce_recommended_lto_flags
     juce::juce_recommended_warning_flags
-    juce::juce_audio_basics
-    juce::juce_audio_devices
-    juce::juce_audio_processors
-    juce::juce_graphics
-    juce::juce_gui_basics
     react_juce)
 
 target_link_libraries(ModDelay PRIVATE ${JUCE_LINK_LIBRARIES})
-
-add_subdirectory(tests)
