@@ -32,11 +32,6 @@ using namespace juce;
 class STFT
 {
 public:
-    static constexpr auto fftOrder = 11;
-    static constexpr auto fftSize = 1 << fftOrder;
-    static constexpr auto overlap = 2;
-    static constexpr auto hopSize = fftSize / overlap;
-
     STFT();
     ~STFT() {}
 

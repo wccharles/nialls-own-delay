@@ -13,11 +13,11 @@ public:
     {
         m_midGain.reset();
         m_midGain.prepare(spec);
-        m_midGain.setRampDurationSeconds(0.005);
+        m_midGain.setRampDurationSeconds(ModDelay::SharedConstants::smoothedValueRamp);
 
         m_sideGain.reset();
         m_sideGain.prepare(spec);
-        m_sideGain.setRampDurationSeconds(0.005);
+        m_sideGain.setRampDurationSeconds(ModDelay::SharedConstants::smoothedValueRamp);
     }
     void process(const dsp::ProcessContextReplacing<float>& context);
     void updateParams(const float stereoWidth)

@@ -127,8 +127,9 @@ set(PLUGIN_SOURCES
 
 target_sources(ModDelay PRIVATE ${PLUGIN_SOURCES})
 
-set(PLUGIN_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/Source
-                        ${CMAKE_SOURCE_DIR}/Source/Params)
+set(PLUGIN_INCLUDE_DIRS
+    ${CMAKE_SOURCE_DIR}/Source ${CMAKE_SOURCE_DIR}/Source/Constants
+    ${CMAKE_SOURCE_DIR}/Source/Params)
 
 target_include_directories(ModDelay PRIVATE ${PLUGIN_INCLUDE_DIRS})
 

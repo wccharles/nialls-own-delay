@@ -1,20 +1,16 @@
 #include "Delay.h"
+#include "Constants.h"
 
-namespace Constants
-{
-    constexpr auto smoothedValueRamp = 0.05f;
-    constexpr auto delayTimeSmoothedValueRamp = 0.25f;
-    constexpr auto maximumDelaySeconds = 4.0f;
-    constexpr auto maximumDelaySampleRate = 192000.0f;
-    constexpr auto maximumDelaySamples = static_cast<int>(maximumDelaySeconds * maximumDelaySampleRate);
-}
+using namespace ModDelay::DelayConstants;
+
+static constexpr auto maximumDelayTimeInSamples = [](double sampleRate)
+{ return static_cast<int>(maximumDelayInSeconds * sampleRate); };
 
 using namespace std::placeholders;
 Delay::Delay(ParamsData& params) :
     m_filterType(0),
     m_prePostFilterChoice(0),
     m_sampleRate(0.0),
-    m_delayLine(Constants::maximumDelaySamples),
     bypassProcess([](const float input, const int channel)
                   {
     ignoreUnused(channel);
@@ -30,20 +26,21 @@ Delay::Delay(ParamsData& params) :
 void Delay::prepare(const dsp::ProcessSpec& spec)
 {
     m_sampleRate = spec.sampleRate;
-    jassert(m_sampleRate <= Constants::maximumDelaySampleRate);
+    jassert(m_sampleRate <= maximumDelaySampleRate);
 
-    m_dryWet.reset(m_sampleRate, Constants::smoothedValueRamp);
-    m_time.reset(m_sampleRate, Constants::delayTimeSmoothedValueRamp);
-    m_feedback.reset(m_sampleRate, Constants::smoothedValueRamp);
+    m_dryWet.reset(m_sampleRate, ModDelay::SharedConstants::smoothedValueRamp);
+    m_time.reset(m_sampleRate, ModDelay::SharedConstants::delayTimeSmoothedValueRamp);
+    m_feedback.reset(m_sampleRate, ModDelay::SharedConstants::smoothedValueRamp);
 
     m_filterDrive.reset();
     m_filterDrive.prepare(spec);
-    m_filterDrive.setRampDurationSeconds(Constants::smoothedValueRamp);
+    m_filterDrive.setRampDurationSeconds(ModDelay::SharedConstants::smoothedValueRamp);
 
     updateParams();
 
     m_delayLine.reset();
     m_delayLine.prepare(spec);
+    m_delayLine.setMaximumDelayInSamples(maximumDelayTimeInSamples(m_sampleRate));
     m_delayLine.setDelay(m_time.getCurrentValue() * static_cast<float>(m_sampleRate));
 
     m_filter.reset();
@@ -117,7 +114,7 @@ void Delay::process(const dsp::ProcessContextReplacing<float>& context)
 void Delay::updateParams()
 {
     const auto currentDelayTime = m_params.getValue(ModDelay::ParamID::DelayTime);
-    assert(currentDelayTime <= Constants::maximumDelaySeconds);
+    jassert(currentDelayTime <= maximumDelayInSeconds);
     m_time.setTargetValue(currentDelayTime);
 
     const auto currentFeedback = m_params.getValue(ModDelay::ParamID::DelayFeedback);

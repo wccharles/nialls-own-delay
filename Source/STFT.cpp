@@ -1,4 +1,7 @@
 #include "STFT.h"
+#include "Constants.h"
+
+using namespace ModDelay::STFTConstants;
 
 STFT::STFT() :
     m_fft((int) log2(fftSize)),
@@ -8,8 +11,7 @@ STFT::STFT() :
 
 void STFT::setup(double sampleRate, const int numChannels)
 {
-    const double smoothTime = 1e-3;
-    m_freqShift.reset(sampleRate, smoothTime);
+    m_freqShift.reset(sampleRate, ModDelay::SharedConstants::smoothedValueRamp);
     setFftSize(numChannels);
     outputBufferWritePosition = hopSize % outputBufferLength;
     updateWindow();

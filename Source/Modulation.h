@@ -1,6 +1,12 @@
 #pragma once
 
+#include "Constants.h"
 #include <JuceHeader.h>
+
+using namespace ModDelay::ModulationConstants;
+
+static constexpr auto maximumModDelayInSamples = [](double sampleRate)
+{ return static_cast<int>(maximumModDelayInSeconds * sampleRate); };
 
 class Modulation
 {
@@ -14,21 +20,23 @@ public:
     {
         m_samplerate = spec.sampleRate;
 
-        m_wowFactor.reset(m_samplerate, 0.05f);
-        m_wowDepth.reset(m_samplerate, 0.05f);
+        m_wowFactor.reset(m_samplerate, ModDelay::SharedConstants::smoothedValueRamp);
+        m_wowDepth.reset(m_samplerate, ModDelay::SharedConstants::smoothedValueRamp);
 
         mod_osc.prepare(spec);
         mod_osc.setFrequency(m_wowFactor.getNextValue());
 
         m_wowDelay.reset();
         m_wowDelay.prepare(spec);
-        m_wowDelay.setMaximumDelayInSamples(static_cast<int>(0.25f * m_samplerate));
+        m_wowDelay.setMaximumDelayInSamples(maximumModDelayInSamples(m_samplerate));
         m_wowDelay.setDelay(0.0f);
     }
 
     void youveGotTheWowFactor(const float wowFactor, const float wowDepth)
     {
+        jassert(wowFactor >= 0.0f && wowFactor <= maximumModulationRate);
         m_wowFactor.setTargetValue(wowFactor);
+        jassert(wowDepth >= 0.0f && wowDepth <= maximumModulationDepth);
         m_wowDepth.setTargetValue(wowDepth);
     }
 

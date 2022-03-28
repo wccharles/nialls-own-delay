@@ -46,7 +46,7 @@ void ModDelayAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBloc
 
     m_gain.reset();
     m_gain.prepare(spec);
-    m_gain.setRampDurationSeconds(0.005);
+    m_gain.setRampDurationSeconds(ModDelay::SharedConstants::smoothedValueRamp);
     const auto gainLinear = m_params.getValue(ModDelay::ParamID::Gain);
     m_gain.setGainLinear(gainLinear);
 }

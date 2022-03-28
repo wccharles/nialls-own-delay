@@ -1,13 +1,11 @@
 #include "FeedbackDelayNetwork.h"
-#include "FDNConstants.h"
+#include "Constants.h"
 
-namespace Constants
-{
-    constexpr auto smoothedValueRamp = 0.05f;
-    constexpr auto delayTimeSmoothedValueRamp = 0.25f;
-}
+using namespace ModDelay::FDNConstants;
 
-using namespace ModDelay::FDNMatrixData;
+static constexpr auto maximumDelayTimeInSamples = [](double sampleRate)
+{ return static_cast<int>(maximumPreDelayInSeconds * sampleRate); };
+
 FeedbackDelayNetwork::FeedbackDelayNetwork(ParamsData& params) :
     m_modulationDepth(0.8f),
     m_decay(0.0f),
@@ -33,10 +31,10 @@ FeedbackDelayNetwork::FeedbackDelayNetwork(ParamsData& params) :
 void FeedbackDelayNetwork::prepare(const dsp::ProcessSpec& spec)
 {
     m_samplerate = spec.sampleRate;
-    m_modulationDepth.reset(m_samplerate, Constants::smoothedValueRamp);
-    m_decay.reset(m_samplerate, Constants::smoothedValueRamp);
-    m_dryWet.reset(m_samplerate, Constants::smoothedValueRamp);
-    m_preDelayTime.reset(m_samplerate, Constants::delayTimeSmoothedValueRamp);
+    m_modulationDepth.reset(m_samplerate, ModDelay::SharedConstants::smoothedValueRamp);
+    m_decay.reset(m_samplerate, ModDelay::SharedConstants::smoothedValueRamp);
+    m_dryWet.reset(m_samplerate, ModDelay::SharedConstants::smoothedValueRamp);
+    m_preDelayTime.reset(m_samplerate, ModDelay::SharedConstants::delayTimeSmoothedValueRamp);
 
     const auto iirCoefficients = dsp::IIR::Coefficients<float>::makeLowPass(m_samplerate, 8000);
     m_lowpass.reset(new dsp::IIR::Filter<float>(iirCoefficients));
@@ -65,7 +63,7 @@ void FeedbackDelayNetwork::prepare(const dsp::ProcessSpec& spec)
 
     m_preDelay.reset();
     m_preDelay.prepare(spec);
-    m_preDelay.setMaximumDelayInSamples(static_cast<int>(0.25f * m_samplerate));
+    m_preDelay.setMaximumDelayInSamples(maximumDelayTimeInSamples(m_samplerate));
     m_preDelay.setDelay(m_preDelayTime.getNextValue() * static_cast<float>(m_samplerate));
 
     m_feedbackNetwork.clear();
