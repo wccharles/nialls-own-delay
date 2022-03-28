@@ -24,7 +24,8 @@ namespace ModDelay
     {
         static constexpr auto minimumCutoffFrequency = 20.0f;
         static constexpr auto maximumCutoffFrequency = 20000.0f;
-        static constexpr auto maximumResonance = 0.99f;
+        static constexpr auto minimumResonance = 0.01f;
+        static constexpr auto maximumResonance = 5.0f;
     } // namespace FilterConstants
 
     namespace STFTConstants

@@ -66,7 +66,7 @@ namespace ModDelay
             { ParamID::FrequencyCutoff, { 20.0f, 20000.0f, 0.0f, 0.3f }, 20000.0f, [](float value, int /* maxLength */)
               { if (value >= 1000.0f) return String(value / 1000.0f, 1) + "kHz"; else return String(value) + "Hz"; } },
 
-            { ParamID::FrequencyResonance, { 0.01f, 10.0f, 0.01f }, 0.7f, [](float value, int /* maxLength */)
+            { ParamID::FrequencyResonance, { 0.01f, 5.0f, 0.01f }, 0.7f, [](float value, int /* maxLength */)
               {
                   return String(value, 2);
               } },

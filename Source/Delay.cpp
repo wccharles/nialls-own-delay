@@ -132,6 +132,7 @@ void Delay::updateParams()
     m_cutoffFrequency.setTargetValue(currentFreqCutoff);
 
     const auto currentFreqResonance = m_params.getValue(ModDelay::ParamID::FrequencyResonance);
+    jassert(currentFreqResonance >= minimumResonance && currentFreqResonance <= maximumResonance);
     m_resonance.setTargetValue(currentFreqResonance);
 
     const auto currentFreqShift = m_params.getValue(ModDelay::ParamID::FreqShift);
