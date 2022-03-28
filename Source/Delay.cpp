@@ -2,12 +2,15 @@
 #include "Constants.h"
 
 using namespace ModDelay::DelayConstants;
+using namespace ModDelay::FilterConstants;
 
 static constexpr auto maximumDelayTimeInSamples = [](double sampleRate)
 { return static_cast<int>(maximumDelayInSeconds * sampleRate); };
 
 using namespace std::placeholders;
 Delay::Delay(ParamsData& params) :
+    m_cutoffFrequency(1.0f),
+    m_resonance(0.01f),
     m_filterType(0),
     m_prePostFilterChoice(0),
     m_sampleRate(0.0),
@@ -35,8 +38,6 @@ void Delay::prepare(const dsp::ProcessSpec& spec)
     m_filterDrive.reset();
     m_filterDrive.prepare(spec);
     m_filterDrive.setRampDurationSeconds(ModDelay::SharedConstants::smoothedValueRamp);
-
-    updateParams();
 
     m_delayLine.reset();
     m_delayLine.prepare(spec);
@@ -127,6 +128,7 @@ void Delay::updateParams()
     m_filterDrive.setGainLinear(currentFilterDrive);
 
     const auto currentFreqCutoff = m_params.getValue(ModDelay::ParamID::FrequencyCutoff);
+    jassert(currentFreqCutoff >= minimumCutoffFrequency && currentFreqCutoff <= maximumCutoffFrequency);
     m_cutoffFrequency.setTargetValue(currentFreqCutoff);
 
     const auto currentFreqResonance = m_params.getValue(ModDelay::ParamID::FrequencyResonance);

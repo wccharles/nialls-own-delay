@@ -9,7 +9,7 @@ STFT::STFT() :
 {
 }
 
-void STFT::setup(double sampleRate, const int numChannels)
+void STFT::setup(const double sampleRate, const int numChannels)
 {
     m_freqShift.reset(sampleRate, ModDelay::SharedConstants::smoothedValueRamp);
     setFftSize(numChannels);
@@ -19,6 +19,7 @@ void STFT::setup(double sampleRate, const int numChannels)
 
 void STFT::updateParameters(const float freqShift)
 {
+    jassert(freqShift >= minimumFrequencyShift && freqShift <= maximumFrequencyShift);
     m_freqShift.setTargetValue(freqShift);
 }
 

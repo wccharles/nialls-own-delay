@@ -54,7 +54,7 @@ namespace ModDelay
                   return String(Decibels::decibelsToGain(value) * 100.f, 1) + "%";
               } },
 
-            { ParamID::DelayDryWet, { 0.0f, 1.0f }, 0.0f, [](float value, int /* maxLength */)
+            { ParamID::DelayDryWet, { 0.0f, 1.0f }, 0.5f, [](float value, int /* maxLength */)
               { return String(value * 100.f, 1) + "%"; } },
             { ParamID::DelayTime, { 0.01f, 1.0f, 0.00001f }, 0.25f, [](float value, int /* maxLength */)
               { return String(value * 1000.0f, 2) + "ms"; } },

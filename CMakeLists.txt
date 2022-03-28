@@ -112,8 +112,6 @@ juce_generate_juce_header(ModDelay)
 set(PLUGIN_SOURCES
     ${CMAKE_SOURCE_DIR}/Source/PluginProcessor.h
     ${CMAKE_SOURCE_DIR}/Source/PluginProcessor.cpp
-    ${CMAKE_SOURCE_DIR}/Source/PluginEditor.h
-    ${CMAKE_SOURCE_DIR}/Source/PluginEditor.cpp
     ${CMAKE_SOURCE_DIR}/Source/Delay.h
     ${CMAKE_SOURCE_DIR}/Source/Delay.cpp
     ${CMAKE_SOURCE_DIR}/Source/StereoProcessor.h

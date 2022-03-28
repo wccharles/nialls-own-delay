@@ -135,6 +135,7 @@ void FeedbackDelayNetwork::updateParams()
     m_dryWet.setTargetValue(currentDryWet);
 
     const auto currentDecay = m_params.getValue(ModDelay::ParamID::ReverbDecay);
+    jassert(currentDecay >= minimumReverbDecay);
     m_decay.setTargetValue(currentDecay);
 
     const auto currentFreeze = m_params.getBoolValue(ModDelay::ParamID::ReverbFreeze);

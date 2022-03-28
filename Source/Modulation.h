@@ -60,7 +60,6 @@ private:
     };
 
     dsp::DelayLine<float> m_wowDelay;
-    dsp::DelayLine<float> m_flutterDelay;
 
     SmoothedValue<float> m_wowFactor;
     SmoothedValue<float> m_wowDepth;
