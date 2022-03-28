@@ -50,10 +50,6 @@ void FeedbackDelayNetwork::prepare(const dsp::ProcessSpec& spec)
         m_delayLines[i].prepare(spec);
         m_delayLines[i].setMaximumDelayInSamples(static_cast<int>(m_samplerate));
         m_delayLines[i].setDelay(exponentialDelayTimes[i] * static_cast<float>(m_samplerate));
-        //        m_lfoOscillators[i].initialise([this](float x)
-        //                                       { return m_modulationDepth.getNextValue() * std::sin(x); });
-        //        m_lfoOscillators[i].prepare(spec);
-        //        m_lfoOscillators[i].setFrequency(lfoRates[i]);
         m_lowShelf[static_cast<int>(i)]->reset();
         m_highShelf[static_cast<int>(i)]->reset();
     }
@@ -96,7 +92,6 @@ void FeedbackDelayNetwork::process(const dsp::ProcessContextReplacing<float>& co
 
                 for (size_t i = 0; i < fdnSize - 1; i++)
                 {
-                    //                    lfoUpdate(i);
                     m_delayLines[i].pushSample(channelIndex, inputMatrix(i, 0));
                     const auto delayedSample = m_delayLines[i].popSample(channelIndex) * m_feedbackGains[i];
                     const auto lowShelfSample = m_lowShelf[static_cast<int>(i)]->processSingleSampleRaw(delayedSample);
@@ -189,12 +184,3 @@ void FeedbackDelayNetwork::updateParams()
     const auto currentPreDelayTime = m_params.getValue(ModDelay::ParamID::ReverbPreDelayTime);
     m_preDelayTime.setTargetValue(currentPreDelayTime);
 }
-
-//void FeedbackDelayNetwork::lfoUpdate(int index)
-//{
-//    const auto lfo = m_lfoOscillators[index].processSample(0.0f);
-//    const auto modDelay = jmap(lfo, -1.0f, 1.0f, primeDelayTimes[index] * static_cast<float>(m_samplerate) - 1.0f, primeDelayTimes[index] * static_cast<float>(m_samplerate) + 1.0f);
-//    const auto modDelayLimit = jlimit(0.0f, static_cast<float>(m_delayLines[index].getMaximumDelayInSamples()), modDelay);
-//
-//    m_delayLines[index].setDelay(modDelayLimit);
-//}

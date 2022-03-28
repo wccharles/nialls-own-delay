@@ -35,8 +35,7 @@ private:
 
     dsp::Matrix<float> m_feedbackNetwork;
 
-    std::vector<dsp::DelayLine<float>>  m_delayLines;
-    std::vector<dsp::Oscillator<float>> m_lfoOscillators;
+    std::vector<dsp::DelayLine<float>> m_delayLines;
 
     OwnedArray<IIRFilter> m_lowShelf;
     OwnedArray<IIRFilter> m_highShelf;
