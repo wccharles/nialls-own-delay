@@ -41,7 +41,6 @@ void FeedbackDelayNetwork::prepare(const dsp::ProcessSpec& spec)
     m_lowpass->prepare(spec);
 
     m_feedbackGains.clear();
-    m_lfoOscillators.resize(fdnSize);
     m_delayLines.resize(fdnSize);
     m_feedbackGains.resize(fdnSize);
     for (size_t i = 0; i < fdnSize - 1; i++)
