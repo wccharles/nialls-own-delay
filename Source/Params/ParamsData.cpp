@@ -25,6 +25,12 @@ juce::AudioProcessorValueTreeState::ParameterLayout ParamsData::createAllParamet
         params.push_back(std::move(param));
     }
 
+    for (auto [id, defaultValue] : ModDelay::ParamTuples::boolParameterData)
+    {
+        auto param = std::make_unique<juce::AudioParameterBool>(id, id, defaultValue);
+        params.push_back(std::move(param));
+    }
+
     return { params.begin(), params.end() };
 }
 
@@ -49,4 +55,13 @@ int ParamsData::getChoiceValue(String parameterID) const
     jassert(choice);
 
     return choice->getIndex();
+}
+
+bool ParamsData::getBoolValue(String ParameterID) const
+{
+    const auto boolParam = dynamic_cast<AudioParameterBool*>(m_valueTreeState.getParameter(ParameterID));
+
+    jassert(boolParam);
+
+    return boolParam->get();
 }

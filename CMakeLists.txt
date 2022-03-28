@@ -117,6 +117,8 @@ set(PLUGIN_SOURCES
     ${CMAKE_SOURCE_DIR}/Source/Delay.h
     ${CMAKE_SOURCE_DIR}/Source/Delay.cpp
     ${CMAKE_SOURCE_DIR}/Source/StereoProcessor.h
+    ${CMAKE_SOURCE_DIR}/Source/FeedbackDelayNetwork.h
+    ${CMAKE_SOURCE_DIR}/Source/FeedbackDelayNetwork.cpp
     ${CMAKE_SOURCE_DIR}/Source/STFT.h
     ${CMAKE_SOURCE_DIR}/Source/STFT.cpp
     ${CMAKE_SOURCE_DIR}/Source/Modulation.h
@@ -167,7 +169,8 @@ endforeach()
 target_compile_definitions(
   ModDelay
   PUBLIC PLUGIN_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}" JUCE_WEB_BROWSER=0
-         JUCE_USE_CURL=0 JUCE_VST3_CAN_REPLACE_VST2=0 JUCER_ENABLE_GPL_MODE=1)
+         JUCE_USE_CURL=0 JUCE_USE_SIMD=1 JUCE_VST3_CAN_REPLACE_VST2=0
+         JUCER_ENABLE_GPL_MODE=1)
 
 set(JUCE_LINK_LIBRARIES
     juce::juce_audio_utils

@@ -26,6 +26,16 @@ namespace ModDelay
         const String PrePostFilter = "PrePostFilter";
         const String FilterType = "FilterType";
 
+        const String ReverbDryWet = "ReverbDryWet";
+        const String ReverbDecay = "ReverbDecay";
+        const String ReverbDampnessAmount = "ReverbDampnessAmount";
+        const String ReverbDampLowFrequency = "ReverbDampLowFreq";
+        const String ReverbDampHighFrequency = "ReverbDampHighFreq";
+        const String ReverbDampLowFactor = "ReverbDampLowFactor";
+        const String ReverbDampHighFactor = "ReverbDampHighFactor";
+        const String ReverbPreDelayTime = "ReverbPreDelayTime";
+        const String ReverbFreeze = "ReverbFreeze";
+
     } // namespace ParamID
 
     const StringArray prePostDelayFilter = { "Pre", "Post" };
@@ -67,12 +77,33 @@ namespace ModDelay
             { ParamID::WowFactor, { 0.0f, 5.0f, 0.01f }, 0.5f, [](float value, int /**/)
               { return String(value) + "Hz"; } },
             { ParamID::WowDepth, { 0.0f, 1.0f }, 0.0f, [](float value, int /**/)
-              { return String(value, 2); } }
+              { return String(value, 2); } },
+
+            { ParamID::ReverbDryWet, { 0.0f, 1.0f }, 0.5f, [](float value, int /* maxLength */)
+              { return String(value * 100.f, 1) + "%"; } },
+            { ParamID::ReverbDecay, { 0.25f, 10.0f, 0.01f }, 0.25f, [](float value, int /* maxLength */)
+              { return String(value, 2) + "s"; } },
+            { ParamID::ReverbDampnessAmount, { 0.0f, 1.0f }, 0.5f, [](float value, int /* maxLength */)
+              { return String(value * 100.0f, 1) + "%"; } },
+            { ParamID::ReverbDampLowFrequency, { 20.0f, 20000.0f, 0.0f, 0.3f }, 250.0f, [](float value, int /* maxLength */)
+              { if (value >= 1000.0f) return String(value / 1000.0f, 1) + "kHz"; else return String(value) + "Hz"; } },
+            { ParamID::ReverbDampHighFrequency, { 20.0f, 20000.0f, 0.0f, 0.3f }, 4000.0f, [](float value, int /* maxLength */)
+              { if (value >= 1000.0f) return String(value / 1000.0f, 1) + "kHz"; else return String(value) + "Hz"; } },
+            { ParamID::ReverbDampLowFactor, { 0.01f, 1.0f }, 1.0f, [](float value, int /**/)
+              { return String(value, 2); } },
+            { ParamID::ReverbDampHighFactor, { 0.01f, 1.0f }, 1.0f, [](float value, int /**/)
+              { return String(value, 2); } },
+            { ParamID::ReverbPreDelayTime, { 0.01f, 0.25f, 0.00001f }, 0.05f, [](float value, int /* maxLength */)
+              { return String(value * 1000.0f, 2) + "ms"; } },
         };
 
         const std::vector<std::tuple<juce::String, juce::StringArray, int>> choiceParameterData {
             { ParamID::PrePostFilter, prePostDelayFilter, 0 },
             { ParamID::FilterType, filterType, 0 }
+        };
+
+        const std::vector<std::tuple<juce::String, bool>> boolParameterData {
+            { ParamID::ReverbFreeze, false }
         };
     }
 }

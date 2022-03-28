@@ -9,6 +9,7 @@
 #pragma once
 
 #include "Delay.h"
+#include "FeedbackDelayNetwork.h"
 #include "ParamsData.h"
 #include "StereoProcessor.h"
 #include <juce_audio_processors/juce_audio_processors.h>
@@ -89,8 +90,9 @@ private:
 
     ParamsData m_params;
 
-    Delay           m_delay;
-    StereoProcessor m_stereoProcessor;
+    Delay                m_delay;
+    FeedbackDelayNetwork m_fdn;
+    StereoProcessor      m_stereoProcessor;
 
     dsp::Gain<float> m_gain;
 

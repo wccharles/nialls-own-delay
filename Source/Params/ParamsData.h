@@ -12,6 +12,7 @@ public:
 
     float getValue(juce::String parameterID) const;
     int   getChoiceValue(String parameterID) const;
+    bool  getBoolValue(String parameterID) const;
 
 private:
     juce::AudioProcessorValueTreeState::ParameterLayout createAllParameters() const;

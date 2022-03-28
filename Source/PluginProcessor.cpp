@@ -15,7 +15,8 @@ ModDelayAudioProcessor::ModDelayAudioProcessor() :
                        .withInput("Input", AudioChannelSet::stereo(), true)
                        .withOutput("Output", AudioChannelSet::stereo(), true)),
     m_params(*this),
-    m_delay(m_params)
+    m_delay(m_params),
+    m_fdn(m_params)
 {
 }
 
@@ -39,6 +40,9 @@ void ModDelayAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBloc
 
     m_delay.prepare(spec);
     m_delay.updateParams();
+
+    m_fdn.prepare(spec);
+    m_fdn.updateParams();
 
     m_gain.reset();
     m_gain.prepare(spec);
@@ -76,6 +80,8 @@ void ModDelayAudioProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer
         juce::dsp::ProcessContextReplacing<float> context(subBlock);
 
         m_gain.process(context);
+        m_fdn.process(context);
+        m_fdn.updateParams();
         m_stereoProcessor.process(context);
         m_stereoProcessor.updateParams(stereoWidth);
         m_delay.process(context);
