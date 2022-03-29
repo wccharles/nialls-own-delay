@@ -97,12 +97,12 @@ namespace ModDelay
               { return String(value * 1000.0f, 2) + "ms"; } },
         };
 
-        const std::vector<std::tuple<juce::String, juce::StringArray, int>> choiceParameterData {
+        const std::vector<std::tuple<String, StringArray, int>> choiceParameterData {
             { ParamID::PrePostFilter, prePostDelayFilter, 0 },
             { ParamID::FilterType, filterType, 0 }
         };
 
-        const std::vector<std::tuple<juce::String, bool>> boolParameterData {
+        const std::vector<std::tuple<String, bool>> boolParameterData {
             { ParamID::ReverbFreeze, false }
         };
     }

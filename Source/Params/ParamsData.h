@@ -6,17 +6,17 @@
 class ParamsData
 {
 public:
-    ParamsData(juce::AudioProcessor& processor);
+    ParamsData(AudioProcessor& processor);
 
-    juce::AudioProcessorValueTreeState& getAPVTS();
+    AudioProcessorValueTreeState& getAPVTS();
 
-    float getValue(juce::String parameterID) const;
+    float getValue(String parameterID) const;
     int   getChoiceValue(String parameterID) const;
     bool  getBoolValue(String parameterID) const;
 
 private:
-    juce::AudioProcessorValueTreeState::ParameterLayout createAllParameters() const;
+    AudioProcessorValueTreeState::ParameterLayout createAllParameters() const;
 
 private:
-    juce::AudioProcessorValueTreeState m_valueTreeState;
+    AudioProcessorValueTreeState m_valueTreeState;
 };
