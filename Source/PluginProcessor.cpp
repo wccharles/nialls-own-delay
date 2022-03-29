@@ -27,7 +27,7 @@ ModDelayAudioProcessor::~ModDelayAudioProcessor()
 
 void ModDelayAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
-    juce::dsp::ProcessSpec spec;
+    dsp::ProcessSpec spec;
     spec.sampleRate = sampleRate;
     spec.maximumBlockSize = static_cast<uint32>(samplesPerBlock);
     spec.numChannels = static_cast<uint32>(getTotalNumOutputChannels());
@@ -68,10 +68,10 @@ void ModDelayAudioProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer
 
     while (subBlockPosition < buffer.getNumSamples())
     {
-        const auto                   subBlockSize = buffer.getNumSamples() - subBlockPosition;
-        juce::dsp::AudioBlock<float> subBlock = block.getSubBlock((size_t) subBlockPosition, static_cast<size_t>(subBlockSize));
+        const auto             subBlockSize = buffer.getNumSamples() - subBlockPosition;
+        dsp::AudioBlock<float> subBlock = block.getSubBlock((size_t) subBlockPosition, static_cast<size_t>(subBlockSize));
 
-        juce::dsp::ProcessContextReplacing<float> context(subBlock);
+        dsp::ProcessContextReplacing<float> context(subBlock);
 
         m_gain.process(context);
         m_fdn.process(context);
