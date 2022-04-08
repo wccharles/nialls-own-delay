@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.19)
 set(PROJECT_NAME NiallsOwnDelay)
 project(${PROJECT_NAME} VERSION 0.1.0)
 set(JUCE_PLUGIN_NAME "Nialls Own Delay")

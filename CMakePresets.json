@@ -1,0 +1,85 @@
+{
+    "version": 2,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 19,
+        "patch": 7
+    },
+    "configurePresets": [
+        {
+            "name": "macOS-default",
+            "generator": "Xcode",
+            "binaryDir": "${sourceDir}/${presetName}",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Darwin"
+            },
+            "cacheVariables": {
+                "CMAKE_OSX_ARCHITECTURES" : "x86_64;arm64",
+                "CMAKE_C_COMPILER": "/usr/bin/clang",
+                "CMAKE_CXX_COMPILER": "/usr/bin/clang++"
+            }
+        },
+        {
+            "name": "macOS-x86_64",
+            "inherits" : [ "macOS-default"],
+            "displayName": "macOS x86_64 configuration",
+            "description": "",
+            "architecture" :{
+                "value": "x86_64",
+                "strategy": "set"
+            }
+        },
+        {
+            "name" : "macOS-arm64",
+            "inherits" : [ "macOS-default"],
+            "displayName": "macOS arm64 configuration",
+            "description": "",
+            "architecture" :{
+                "value": "arm64",
+                "strategy": "set"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "macOS-x86_64-build",
+            "configurePreset": "macOS-x86_64"
+        },
+        {
+            "name": "macOS-x86_64-Debug",
+            "inherits": ["macOS-x86_64-build"],
+            "description": "",
+            "displayName": "",
+            "configuration": "Debug"
+        },
+        {
+            "name": "macOS-x86_64-Release",
+            "inherits": ["macOS-x86_64-build"],
+            "description": "",
+            "displayName": "",
+            "jobs": 4,
+            "configuration": "Release"
+        },
+        {
+            "name": "macOS-arm64-build",
+            "configurePreset": "macOS-arm64"
+        },
+        {
+            "name": "macOS-x86_64-Debug",
+            "inherits": ["macos-arm64-build"],
+            "description": "",
+            "displayName": "",
+            "configuration": "Debug"
+        },
+        {
+            "name": "macOS-arm64-Release",
+            "inherits": ["macOS-arm64-build"],
+            "description": "",
+            "displayName": "",
+            "jobs": 4,
+            "configuration": "Release"
+        }
+    ]
+}
