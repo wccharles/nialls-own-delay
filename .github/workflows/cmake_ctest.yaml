@@ -54,7 +54,7 @@ jobs:
 
     - name: Build
       shell: bash
-      run: cmake --build --preset=${{ matrix.os }}_${{ env.BUILD_TYPE }}
+      run: cmake --build --preset=${{ matrix.os }}-${{ env.BUILD_TYPE }}
 
     - name: Test
       working-directory: ${{ github.workspace }}/${{ matrix.os }}
