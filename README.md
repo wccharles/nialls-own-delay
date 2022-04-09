@@ -15,7 +15,7 @@ This project was influenced by an idea suggested by a good friend and musician, 
 
 ## System Requirements
 
-* [CMake](https://cmake.org/download/) (>= v3.15)
+* [CMake](https://cmake.org/download/) (>= v3.19)
 * macOS 10.13+ (currently only tested with this configuration but welcoming contributers to )
 
 ## Cloning
