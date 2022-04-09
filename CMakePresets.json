@@ -1,5 +1,5 @@
 {
-    "version": 2,
+    "version": 3,
     "cmakeMinimumRequired": {
         "major": 3,
         "minor": 19,
@@ -8,6 +8,7 @@
     "configurePresets": [
         {
             "name": "macOS-default",
+            "hidden": true,
             "generator": "Xcode",
             "binaryDir": "${sourceDir}/${presetName}",
             "condition": {
@@ -22,62 +23,31 @@
             }
         },
         {
-            "name": "macOS-x86_64",
+            "name": "macOS-11.0",
             "inherits" : [ "macOS-default"],
-            "displayName": "macOS x86_64 configuration",
-            "description": "",
-            "architecture" :{
-                "value": "x86_64",
-                "strategy": "set"
-            }
-        },
-        {
-            "name" : "macOS-arm64",
-            "inherits" : [ "macOS-default"],
-            "displayName": "macOS arm64 configuration",
-            "description": "",
-            "architecture" :{
-                "value": "arm64",
-                "strategy": "set"
-            }
+            "displayName": "macOS 11.0 configuration",
+            "description": "This is the default configuration for macOS 11.0."
         }
     ],
     "buildPresets": [
         {
-            "name": "macOS-x86_64-build",
-            "configurePreset": "macOS-x86_64"
+            "name": "macOS-11.0-build",
+            "hidden": true,
+            "configurePreset": "macOS-11.0",
+            "inheritConfigureEnvironment": true
         },
         {
-            "name": "macOS-x86_64-Debug",
-            "inherits": ["macOS-x86_64-build"],
-            "description": "",
-            "displayName": "",
+            "name": "macOS-11.0-Debug",
+            "inherits": ["macOS-11.0-build"],
+            "description": "Debug build for macOS 11.0.",
+            "displayName": "macOS 11.0 Debug",
             "configuration": "Debug"
         },
         {
-            "name": "macOS-x86_64-Release",
-            "inherits": ["macOS-x86_64-build"],
-            "description": "",
-            "displayName": "",
-            "jobs": 4,
-            "configuration": "Release"
-        },
-        {
-            "name": "macOS-arm64-build",
-            "configurePreset": "macOS-arm64"
-        },
-        {
-            "name": "macOS-x86_64-Debug",
-            "inherits": ["macos-arm64-build"],
-            "description": "",
-            "displayName": "",
-            "configuration": "Debug"
-        },
-        {
-            "name": "macOS-arm64-Release",
-            "inherits": ["macOS-arm64-build"],
-            "description": "",
-            "displayName": "",
+            "name": "macOS-11.0-Release",
+            "inherits": ["macOS-11.0-build"],
+            "description": "Release build for macOS 11.0.",
+            "displayName": "macOS x86_64 Release",
             "jobs": 4,
             "configuration": "Release"
         }
