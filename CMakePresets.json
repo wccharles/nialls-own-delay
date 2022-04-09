@@ -13,6 +13,27 @@
             "binaryDir": "${sourceDir}/${presetName}"
         },
         {
+            "name": "Linux-default",
+            "inherits": ["Ninja-default"],
+            "hidden": true,
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++"
+            }
+        },
+        {
+            "name": "ubuntu-latest",
+            "inherits": ["Linux-default"],
+            "displayName": "Ubuntu 18.04",
+            "description": "Ubuntu 18.04"
+        },
+        {
             "name": "macos-default",
             "inherits": [
                 "Ninja-default"
@@ -78,6 +99,18 @@
         }
     ],
     "buildPresets": [
+        {
+            "name": "ubuntu-build",
+            "hidden": true,
+            "configurePreset": "ubuntu-latest",
+            "inheritConfigureEnvironment": true
+        },
+        {
+            "name": "ubuntu-latest-release",
+            "inherits": ["ubuntu-build"],
+            "description": "Ubuntu 18.04 Release",
+            "displayName": "Ubuntu 18.04 Release"
+        },
         {
             "name": "macos-11.0-build",
             "hidden": true,
