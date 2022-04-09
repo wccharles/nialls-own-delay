@@ -4,8 +4,8 @@ on: [push]
 
 env:
   PROJECT_NAME: NiallsOwnDelay
+  PLUGIN_NAME: 'Nialls Own Delay'
   BUILD_TYPE: Release
-  BUILD_DIR: Builds
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   DISPLAY: :0 # linux pluginval needs this
 
@@ -41,7 +41,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
       with:
-        submodules: true # Gotta get JUCE populated
+        submodules: recursive # Gotta get JUCE populated
 
     - name: ccache
       if: matrix.os != 'windows-latest'
@@ -51,24 +51,53 @@ jobs:
 
     - name: Configure
       shell: bash
-      run: cmake -B ${{ env.BUILD_DIR }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE}} -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" .
+      run: cmake --preset=${{ matrix.os }}
 
     - name: Build
       shell: bash
-      run: cmake --build ${{ env.BUILD_DIR }} --config ${{ env.BUILD_TYPE }}
+      run: cmake --build --preset=${{ matrix.os }}-${{ env.BUILD_TYPE }}
 
     - name: Test
-      working-directory: ${{ env.BUILD_DIR }}
+      working-directory: ${{ github.workspace }}/${{ matrix.os }}
       run: ctest
 
+    - name: Pluginval Linux
+      working-directory: ${{ github.workspace }}/${{ matrix.os }}
+      if: matrix.artifact == 'Linux'
+      run: |
+        curl -L "https://github.com/Tracktion/pluginval/releases/download/v0.3.0/pluginval_${{ matrix.artifact }}.zip" -o pluginval.zip
+        unzip pluginval
+        # start xvfb in the background
+        sudo /usr/bin/Xvfb $DISPLAY -screen 0 1280x1024x24 &
+
+        ./pluginval --strictness-level 10 --skip-gui-tests --validate-in-process --verbose --output-dir "." --validate "${{ env.PROJECT_NAME }}_artefacts/${{ env.BUILD_TYPE }}/VST3/${{ env.PLUGIN_NAME }}.vst3"
+
+    - name: Pluginval Mac
+      working-directory: ${{ github.workspace }}/${{ matrix.os }}
+      if: matrix.artifact == 'MacOS'
+      run: |
+        curl -L "https://github.com/Tracktion/pluginval/releases/download/v0.3.0/pluginval_${{ matrix.artifact }}.zip" -o pluginval.zip
+        unzip pluginval
+        pluginval.app/Contents/MacOS/pluginval --strictness-level 10 --validate-in-process --verbose --output-dir "." --validate "${{ env.PROJECT_NAME }}_artefacts/${{ env.BUILD_TYPE }}/VST3/${{ env.PLUGIN_NAME }}.vst3"
+
+    # - name: Pluginval Windows
+    #   shell: cmd
+    #   working-directory: ${{ github.workspace }}/${{ matrix.os }}
+    #   if: matrix.artifact == 'Windows'
+    #   run: |
+    #     powershell -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest https://github.com/Tracktion/pluginval/releases/download/v0.3.0/pluginval_Windows.zip -OutFile pluginval.zip"
+    #     powershell -Command "Expand-Archive pluginval.zip -DestinationPath ."
+    #     pluginval.exe --strictness-level 10 --validate-in-process --output-dir "./bin" --validate "${{ env.PROJECT_NAME }}_artefacts/${{ env.BUILD_TYPE }}/VST3/${{ env.PLUGIN_NAME }}.vst3"
+    #     if %ERRORLEVEL% neq 0 { exit /b 1 }
+
     - name: Zip
-      working-directory: ${{ env.BUILD_DIR }}
+      working-directory: ${{ matrix.os }}
       run: cmake -E tar cfv ${{ env.PROJECT_NAME }}-${{ matrix.artifact }}.zip --format=zip ${{ env.PROJECT_NAME }}_artefacts
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
-        path: ${{ env.BUILD_DIR }}/${{ env.PROJECT_NAME }}-${{ matrix.artifact }}.zip
+        path: ${{ matrix.os }}/${{ env.PROJECT_NAME }}-${{ matrix.artifact }}.zip
         name: ${{ env.PROJECT_NAME }}-${{ matrix.artifact }}
 
   release:

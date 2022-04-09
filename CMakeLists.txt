@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.19)
 set(PROJECT_NAME NiallsOwnDelay)
 project(${PROJECT_NAME} VERSION 0.1.0)
 set(JUCE_PLUGIN_NAME "Nialls Own Delay")
@@ -25,7 +25,8 @@ if(APPLE)
   set(VST3_DIR "$ENV{HOME}/Library/Audio/Plug-Ins/VST3")
   set(AU_DIR "$ENV{HOME}/Library/Audio/Plug-Ins/Components")
 elseif(WIN32)
-  set(VST3_DIR "%CommonProgramFiles%/VST3" "%CommonProgramFiles(x86)%/VST3")
+  set(VST3_DIR "C:/Program Files/Common Files/VST3"
+               "C:/Program Files (x86)/Common Files/VST3")
 endif()
 
 juce_add_plugin(
@@ -94,7 +95,7 @@ juce_add_plugin(
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
 if(MSVC)
-  target_compile_options(${PROJECT_NAME} PRIVATE /W3 /WX)
+  target_compile_options(${PROJECT_NAME} PRIVATE /W3)
 else()
   target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Werror)
 endif()
