@@ -25,7 +25,7 @@ if(APPLE)
   set(VST3_DIR "$ENV{HOME}/Library/Audio/Plug-Ins/VST3")
   set(AU_DIR "$ENV{HOME}/Library/Audio/Plug-Ins/Components")
 elseif(WIN32)
-  set(VST3_DIR "%CommonProgramFiles%/VST3" "%CommonProgramFiles(x86)%/VST3")
+  set(VST3_DIR "$PROGRAMFILES64\\\\Common Files\\\\VST3")
 endif()
 
 juce_add_plugin(
