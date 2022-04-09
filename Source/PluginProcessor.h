@@ -94,5 +94,8 @@ private:
 
     dsp::Gain<float> m_gain;
 
+    // A workaround to fix a warning -Woverloaded-virtual
+    using juce::AudioProcessor::processBlock;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ModDelayAudioProcessor)
 };
