@@ -1,5 +1,6 @@
 #include "STFT.h"
-#include "Constants.h"
+#include "STFTConstants.h"
+#include "SharedConstants.h"
 
 using namespace ModDelay::STFTConstants;
 
