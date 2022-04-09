@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Constants.h"
+#include "ModulationConstants.h"
+#include "SharedConstants.h"
 #include <JuceHeader.h>
 
 using namespace ModDelay::ModulationConstants;
