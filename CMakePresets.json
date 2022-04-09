@@ -106,7 +106,7 @@
             "inheritConfigureEnvironment": true
         },
         {
-            "name": "ubuntu-latest-release",
+            "name": "ubuntu-latest-Release",
             "inherits": ["ubuntu-build"],
             "description": "Ubuntu 18.04 Release",
             "displayName": "Ubuntu 18.04 Release"
