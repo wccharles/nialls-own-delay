@@ -1,5 +1,7 @@
 # Niall's Own Delay
 
+[![CMake](https://github.com/wccharles/nialls-own-delay/actions/workflows/cmake_ctest.yaml/badge.svg?event=push)](https://github.com/wccharles/nialls-own-delay/actions/workflows/cmake_ctest.yaml)
+
 ## Background
 
 This project was influenced by an idea suggested by a good friend and musician, Niall. I started and procastinated on this project, but eventually started approaching it in a more serious way, treating it as a comprehensive exercise into the workflow of building a plugin, as well as an independent venture towards creating a sonically interesting effect. As of this initial documentation, I hope to bring in more features and improve the performance of the plugin in all aspects.
@@ -44,6 +46,20 @@ Unless you happen to be building on an IDE generator, (or you just love the comm
 
 ```bash
 cmake --build [BUILD_FOLDER] --target <targetName> (--config Release/Debug/...)
+```
+
+**Update:** To enable an easier workflow across all supported platforms, this project now makes uses of cmake presets with platform-specific flags and environment variables. The available preset names for configuration include `macos-latest`, `ubuntu-latest`, `windows-latest` and `iOS`. To configure with these presets:
+
+```bash
+cmake --preset=[PRESET_NAME] (...)
+```
+
+This will generate a build tree with the preset name as the directory.
+
+Similarly, the build preset values contain platform specific flags for different configurations: `macos-latest-Debug`, `macos-latest-Release`, `ubuntu-latest-Release`, `windows-latest-Debug`, `windows-latest-Release`, `iOS-Debug`, and `iOS-Release`.
+
+```bash
+cmake --build --preset=[PRESET_NAME] (...)
 ```
 
 ## Other Notes
