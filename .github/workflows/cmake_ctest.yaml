@@ -56,6 +56,14 @@ jobs:
         configurePreset: ${{ matrix.os }}
         buildPreset: ${{ matrix.os }}-Release
 
+    - name: Pluginval Mac
+      working-directory: ${{ matrix.os }}
+      if: matrix.artifact == 'MacOS'
+      run: |
+        curl -L "https://github.com/Tracktion/pluginval/releases/download/v0.3.0/pluginval_${{ matrix.artifact }}.zip" -o pluginval.zip
+        unzip pluginval
+        pluginval.app/Contents/MacOS/pluginval --strictness-level 10 --validate-in-process --verbose --output-dir "." --validate "${{ env.PROJECT_NAME }}_artefacts/${{ env.BUILD_TYPE }}/VST3/${{ env.PROJECT_NAME }}.vst3"
+
     - name: Zip
       working-directory: ${{ matrix.os }}
       run: cmake -E tar cfv ${{ env.PROJECT_NAME }}-${{ matrix.artifact }}.zip --format=zip ${{ env.PROJECT_NAME }}_artefacts

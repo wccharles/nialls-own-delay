@@ -7,10 +7,18 @@
     },
     "configurePresets": [
         {
+            "name": "Ninja-default",
+            "generator": "Ninja Multi-Config",
+            "hidden": true,
+            "binaryDir": "${sourceDir}/${presetName}"
+        },
+        {
             "name": "macOS-default",
+            "inherits": [
+                "Ninja-default"
+            ],
             "hidden": true,
             "generator": "Xcode",
-            "binaryDir": "${sourceDir}/${presetName}",
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
@@ -23,10 +31,50 @@
             }
         },
         {
+            "name": "windows-default",
+            "inherits": [
+                "Ninja-default"
+            ],
+            "hidden": true,
+            "generator": "Visual Studio 16 2019",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
+            "architecture": {
+                "value": "x64",
+                "strategy": "external"
+            },
+            "cacheVariables": {
+                "CMAKE_GENERATOR_PLATFORM": "Win32",
+                "CMAKE_C_COMPILER" : "cl",
+                "CMAKE_CXX_COMPILER" : "cl"
+            },
+            "vendor": {"microsoft.com/VisualStudioSettings/CMake/1.0": { "hostOS": [ "Windows" ] } }
+        },
+        {
             "name": "macOS-11.0",
             "inherits" : [ "macOS-default"],
             "displayName": "macOS 11.0 configuration",
             "description": "This is the default configuration for macOS 11.0."
+        },
+        {
+            "name": "windows-latest",
+            "inherits" : [ "windows-default"],
+            "displayName": "Windows latest configuration",
+            "description": "This is the default configuration for Windows."
+        },
+        {
+            "name" : "iOS",
+            "inherits" : [ "macOS-default"],
+            "description": "",
+            "cacheVariables": {
+                "CMAKE_SYSTEM_NAME" : "iOS",
+                "CMAKE_OSX_DEPLOYMENT_TARGET" : "9.3",
+                "CMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED" : "NO",
+                "CMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY": ""
+            }
         }
     ],
     "buildPresets": [
@@ -50,6 +98,49 @@
             "displayName": "macOS x86_64 Release",
             "jobs": 4,
             "configuration": "Release"
+        },
+        {
+            "name": "windows-latest-build",
+            "hidden": true,
+            "configurePreset": "windows-latest",
+            "inheritConfigureEnvironment": true
+        },
+        {
+            "name": "windows-latest-Debug",
+            "inherits": ["windows-latest-build"],
+            "description": "Debug build for Windows.",
+            "displayName": "Windows Debug",
+            "configuration": "Debug"
+        },
+        {
+            "name": "windows-latest-Release",
+            "inherits": ["windows-latest-build"],
+            "description": "Release build for Windows.",
+            "displayName": "Windows Release",
+            "jobs": 8,
+            "configuration": "Release"
+        },
+        {
+            "name": "iOS-build-default",
+            "hidden": true,
+            "configurePreset": "iOS",
+            "inheritConfigureEnvironment": true,
+            "targets" :["NiallsOwnDelay_Standalone", "NiallsOwnDelay_AUv3"]
+        },
+        {
+            "name": "iOS-Debug",
+            "configurePreset": "iOS",
+            "configuration": "Debug",
+            "inherits" :["iOS-build-default"],
+            "nativeToolOptions": [
+                "-sdk=iphonesimulator"
+            ]
+        },
+        {
+            "name": "iOS-Release",
+            "configurePreset": "iOS",
+            "configuration": "Release",
+            "inherits" :["iOS-build-default"]
         }
     ]
 }
