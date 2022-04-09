@@ -4,6 +4,7 @@ on: [push]
 
 env:
   PROJECT_NAME: NiallsOwnDelay
+  PLUGIN_NAME: 'Nialls Own Delay'
   BUILD_TYPE: Release
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   DISPLAY: :0 # linux pluginval needs this
@@ -75,7 +76,7 @@ jobs:
       run: |
         powershell -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest https://github.com/Tracktion/pluginval/releases/download/v0.3.0/pluginval_Windows.zip -OutFile pluginval.zip"
         powershell -Command "Expand-Archive pluginval.zip -DestinationPath ."
-        pluginval.exe --strictness-level 10 --validate-in-process --output-dir "./bin" --validate "${{ env.PROJECT_NAME }}_artefacts/${{ env.BUILD_TYPE }}/VST3/${{ env.PROJECT_NAME }}.vst3"
+        pluginval.exe --strictness-level 10 --validate-in-process --output-dir "./bin" --validate "${{ env.PROJECT_NAME }}_artefacts/${{ env.BUILD_TYPE }}/VST3/${{ env.PLUGIN_NAME }}.vst3"
         if %ERRORLEVEL% neq 0 { exit /b 1 }
 
     - name: Zip
