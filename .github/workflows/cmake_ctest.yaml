@@ -80,15 +80,15 @@ jobs:
         unzip pluginval
         pluginval.app/Contents/MacOS/pluginval --strictness-level 10 --validate-in-process --verbose --output-dir "." --validate "${{ env.PROJECT_NAME }}_artefacts/${{ env.BUILD_TYPE }}/VST3/${{ env.PLUGIN_NAME }}.vst3"
 
-    - name: Pluginval Windows
-      shell: cmd
-      working-directory: ${{ github.workspace }}/${{ matrix.os }}
-      if: matrix.artifact == 'Windows'
-      run: |
-        powershell -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest https://github.com/Tracktion/pluginval/releases/download/v0.3.0/pluginval_Windows.zip -OutFile pluginval.zip"
-        powershell -Command "Expand-Archive pluginval.zip -DestinationPath ."
-        pluginval.exe --strictness-level 10 --validate-in-process --output-dir "./bin" --validate "${{ env.PROJECT_NAME }}_artefacts/${{ env.BUILD_TYPE }}/VST3/${{ env.PLUGIN_NAME }}.vst3"
-        if %ERRORLEVEL% neq 0 { exit /b 1 }
+    # - name: Pluginval Windows
+    #   shell: cmd
+    #   working-directory: ${{ github.workspace }}/${{ matrix.os }}
+    #   if: matrix.artifact == 'Windows'
+    #   run: |
+    #     powershell -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest https://github.com/Tracktion/pluginval/releases/download/v0.3.0/pluginval_Windows.zip -OutFile pluginval.zip"
+    #     powershell -Command "Expand-Archive pluginval.zip -DestinationPath ."
+    #     pluginval.exe --strictness-level 10 --validate-in-process --output-dir "./bin" --validate "${{ env.PROJECT_NAME }}_artefacts/${{ env.BUILD_TYPE }}/VST3/${{ env.PLUGIN_NAME }}.vst3"
+    #     if %ERRORLEVEL% neq 0 { exit /b 1 }
 
     - name: Zip
       working-directory: ${{ matrix.os }}
