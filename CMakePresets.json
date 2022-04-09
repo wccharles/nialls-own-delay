@@ -55,7 +55,7 @@
         },
         {
             "name": "macos-11.0",
-            "inherits" : [ "macOS-default"],
+            "inherits" : [ "macos-default"],
             "displayName": "macOS 11.0 configuration",
             "description": "This is the default configuration for macOS 11.0."
         },
