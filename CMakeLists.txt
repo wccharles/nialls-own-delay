@@ -19,7 +19,7 @@ option(JUCE_ENABLE_MODULE_SOURCE_GROUPS
 add_subdirectory(third-party/JUCE)
 add_subdirectory(third-party/react-juce)
 
-set(PLUG_FORMATS AUv3 VST3 Standalone)
+set(PLUG_FORMATS AU AUv3 VST3 Standalone)
 
 if(APPLE)
   set(VST3_DIR "$ENV{HOME}/Library/Audio/Plug-Ins/VST3")
@@ -62,7 +62,6 @@ juce_add_plugin(
   WC01
   FORMATS
   ${PLUG_FORMATS}
-  kPlugCategEffect
   VST3_CATEGORIES
   Delay
   Filter
@@ -79,7 +78,7 @@ juce_add_plugin(
   AU_COPY_DIR
   ${AU_DIR}
   AU_MAIN_TYPE
-  kAudioUnitType_MusicEffect
+  kAudioUnitType_Effect
   PRODUCT_NAME
   ${JUCE_PLUGIN_NAME}
   PLUGIN_NAME
