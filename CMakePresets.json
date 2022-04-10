@@ -22,7 +22,6 @@
                 "rhs": "Linux"
             },
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release",
                 "CMAKE_C_COMPILER": "gcc",
                 "CMAKE_CXX_COMPILER": "g++"
             }
@@ -106,10 +105,18 @@
             "inheritConfigureEnvironment": true
         },
         {
+            "name": "ubuntu-latest-Debug",
+            "inherits": ["ubuntu-build"],
+            "description": "Ubuntu 18.04 Debug",
+            "displayName": "Ubuntu 18.04 Debug",
+            "configuration": "Debug"
+        },
+        {
             "name": "ubuntu-latest-Release",
             "inherits": ["ubuntu-build"],
             "description": "Ubuntu 18.04 Release",
-            "displayName": "Ubuntu 18.04 Release"
+            "displayName": "Ubuntu 18.04 Release",
+            "configuration": "Release"
         },
         {
             "name": "macos-11.0-build",

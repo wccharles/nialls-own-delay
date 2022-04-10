@@ -1,5 +1,6 @@
 #include "Delay.h"
-#include "Constants.h"
+#include "DelayConstants.h"
+#include "SharedConstants.h"
 
 using namespace ModDelay::DelayConstants;
 using namespace ModDelay::FilterConstants;

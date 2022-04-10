@@ -1,5 +1,6 @@
 #include "FeedbackDelayNetwork.h"
-#include "Constants.h"
+#include "FDNContants.h"
+#include "SharedConstants.h"
 
 using namespace ModDelay::FDNConstants;
 
