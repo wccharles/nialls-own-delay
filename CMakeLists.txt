@@ -44,6 +44,8 @@ juce_add_plugin(
   "C.walker10@edu.salford.ac.uk"
   COMPANY_WEBSITE
   "github.com/wccharles"
+  DESCRIPTION
+  "A complex echo plugin with reverb and delay"
   IS_SYNTH
   FALSE
   NEEDS_MIDI_INPUT
