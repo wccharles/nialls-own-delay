@@ -94,7 +94,7 @@ void STFT::updateWindow()
 {
     for (int sample = 0; sample < fftSize; ++sample)
     {
-        fftWindow[sample] = 0.5f - 0.5f * cosf(2.0f * pi * (float) sample / (float) (fftSize - 1));
+        fftWindow[sample] = 0.5f - 0.5f * cosf(2.0f * ModDelay::SharedConstants::pi * (float) sample / (float) (fftSize - 1));
     }
 
     float windowSum = 0.0f;

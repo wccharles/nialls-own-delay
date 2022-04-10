@@ -6,7 +6,6 @@ namespace ModDelay
 {
     namespace STFTConstants
     {
-        static constexpr auto pi = juce::MathConstants<float>::pi;
         static constexpr auto fftOrder = 11;
         static constexpr auto fftSize = 1 << fftOrder;
         static constexpr auto overlap = 2;
