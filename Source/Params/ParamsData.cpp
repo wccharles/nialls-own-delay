@@ -13,21 +13,21 @@ ParamsData::ParamsData(AudioProcessor& processor) :
 AudioProcessorValueTreeState::ParameterLayout ParamsData::createAllParameters() const
 {
     std::vector<std::unique_ptr<RangedAudioParameter>> params;
-    for (auto [id, range, defaultValue, stringFromValue] : ModDelay::ParamTuples::floatParameterData)
+    for (auto [id, name, range, defaultValue, stringFromValue] : ModDelay::ParamTuples::floatParameterData)
     {
-        auto param = std::make_unique<AudioParameterFloat>(id, id, range, defaultValue, String(), AudioProcessorParameter::genericParameter, stringFromValue);
+        auto param = std::make_unique<AudioParameterFloat>(id, name, range, defaultValue, String(), AudioProcessorParameter::genericParameter, stringFromValue);
         params.push_back(std::move(param));
     }
 
-    for (auto [id, options, defaultIndex] : ModDelay::ParamTuples::choiceParameterData)
+    for (auto [id, name, options, defaultIndex] : ModDelay::ParamTuples::choiceParameterData)
     {
-        auto param = std::make_unique<AudioParameterChoice>(id, id, options, defaultIndex);
+        auto param = std::make_unique<AudioParameterChoice>(id, name, options, defaultIndex);
         params.push_back(std::move(param));
     }
 
-    for (auto [id, defaultValue] : ModDelay::ParamTuples::boolParameterData)
+    for (auto [id, name, defaultValue] : ModDelay::ParamTuples::boolParameterData)
     {
-        auto param = std::make_unique<AudioParameterBool>(id, id, defaultValue);
+        auto param = std::make_unique<AudioParameterBool>(id, name, defaultValue);
         params.push_back(std::move(param));
     }
 
