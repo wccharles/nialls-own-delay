@@ -93,7 +93,7 @@ jobs:
     #     if %ERRORLEVEL% neq 0 { exit /b 1 }
 
     - name: Zip
-      working-directory: ${{ matrix.os }}
+      working-directory: ${{ env.BUILD_DIR }}
       run: cmake -E tar cfv ${{ env.PROJECT_NAME }}-${{ matrix.artifact }}.zip --format=zip ${{ env.PROJECT_NAME }}_artefacts
 
     - name: Upload Artifact
