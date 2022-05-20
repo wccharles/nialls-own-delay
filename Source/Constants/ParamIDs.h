@@ -44,66 +44,66 @@ namespace ModDelay
     namespace ParamTuples
     {
         // Tuple of parameter data goes: ID, Range, Default Value.
-        const std::vector<std::tuple<String, NormalisableRange<float>, float, std::function<String(float, int)>>> floatParameterData {
+        const std::vector<std::tuple<String, String, NormalisableRange<float>, float, std::function<String(float, int)>>> floatParameterData {
 
-            { ParamID::Gain, { 0.0f, 1.0f }, 0.75f, [](float value, int /* maxLength */)
+            { ParamID::Gain, "Master Gain", { 0.0f, 1.0f }, 0.75f, [](float value, int /* maxLength */)
               { return String(Decibels::gainToDecibels(value), 1) + "dB"; } },
 
-            { ParamID::StereoWidth, { Decibels::gainToDecibels(0.5f), Decibels::gainToDecibels(2.0f) }, 0.0f, [](float value, int /* maxLength */)
+            { ParamID::StereoWidth, "Stereo Width", { Decibels::gainToDecibels(0.5f), Decibels::gainToDecibels(2.0f) }, 0.0f, [](float value, int /* maxLength */)
               {
                   return String(Decibels::decibelsToGain(value) * 100.f, 1) + "%";
               } },
 
-            { ParamID::DelayDryWet, { 0.0f, 1.0f }, 0.5f, [](float value, int /* maxLength */)
+            { ParamID::DelayDryWet, "Delay Dry/Wet", { 0.0f, 1.0f }, 0.5f, [](float value, int /* maxLength */)
               { return String(value * 100.f, 1) + "%"; } },
-            { ParamID::DelayTime, { 0.01f, 1.0f, 0.00001f }, 0.25f, [](float value, int /* maxLength */)
+            { ParamID::DelayTime, "Delay Time", { 0.01f, 1.0f, 0.00001f }, 0.25f, [](float value, int /* maxLength */)
               { return String(value * 1000.0f, 2) + "ms"; } },
-            { ParamID::DelayFeedback, { 0.0f, 1.0f }, 0.5f, [](float value, int /* maxLength */)
+            { ParamID::DelayFeedback, "Delay Feedback", { 0.0f, 1.0f }, 0.5f, [](float value, int /* maxLength */)
               { return String(value * 100.f, 1) + "%"; } },
 
-            { ParamID::FilterDrive, { 0.5f, 2.0f }, 1.0f, [](float value, int /* maxLength */)
+            { ParamID::FilterDrive, "Filter Drive", { 0.5f, 2.0f }, 1.0f, [](float value, int /* maxLength */)
               { return String(Decibels::gainToDecibels(value), 1) + "dB"; } },
-            { ParamID::FrequencyCutoff, { 20.0f, 20000.0f, 0.0f, 0.3f }, 20000.0f, [](float value, int /* maxLength */)
+            { ParamID::FrequencyCutoff, "Filter Cutoff", { 20.0f, 20000.0f, 0.0f, 0.3f }, 20000.0f, [](float value, int /* maxLength */)
               { if (value >= 1000.0f) return String(value / 1000.0f, 1) + "kHz"; else return String(value) + "Hz"; } },
 
-            { ParamID::FrequencyResonance, { 0.01f, 5.0f, 0.01f }, 0.7f, [](float value, int /* maxLength */)
+            { ParamID::FrequencyResonance, "Filter Resonance", { 0.01f, 5.0f, 0.01f }, 0.7f, [](float value, int /* maxLength */)
               {
                   return String(value, 2);
               } },
 
-            { ParamID::FreqShift, { -12.0f, 12.0f, 2.0f }, 0.0f, [](float value, int /**/)
+            { ParamID::FreqShift, "Frequency Shift", { -12.0f, 12.0f, 2.0f }, 0.0f, [](float value, int /**/)
               { return String(value); } },
 
-            { ParamID::WowFactor, { 0.0f, 5.0f, 0.01f }, 0.5f, [](float value, int /**/)
+            { ParamID::WowFactor, "Modulation Rate", { 0.0f, 5.0f, 0.01f }, 0.5f, [](float value, int /**/)
               { return String(value) + "Hz"; } },
-            { ParamID::WowDepth, { 0.0f, 1.0f }, 0.0f, [](float value, int /**/)
+            { ParamID::WowDepth, "Modulation Depth", { 0.0f, 1.0f }, 0.0f, [](float value, int /**/)
               { return String(value, 2); } },
 
-            { ParamID::ReverbDryWet, { 0.0f, 1.0f }, 0.5f, [](float value, int /* maxLength */)
+            { ParamID::ReverbDryWet, "Reverb Dry/Wet", { 0.0f, 1.0f }, 0.5f, [](float value, int /* maxLength */)
               { return String(value * 100.f, 1) + "%"; } },
-            { ParamID::ReverbDecay, { 0.25f, 10.0f, 0.01f }, 0.25f, [](float value, int /* maxLength */)
+            { ParamID::ReverbDecay, "Reverb Decay", { 0.25f, 10.0f, 0.01f }, 0.25f, [](float value, int /* maxLength */)
               { return String(value, 2) + "s"; } },
-            { ParamID::ReverbDampnessAmount, { 0.0f, 1.0f }, 0.5f, [](float value, int /* maxLength */)
+            { ParamID::ReverbDampnessAmount, "Reverb Dampness", { 0.0f, 1.0f }, 0.5f, [](float value, int /* maxLength */)
               { return String(value * 100.0f, 1) + "%"; } },
-            { ParamID::ReverbDampLowFrequency, { 20.0f, 20000.0f, 0.0f, 0.3f }, 250.0f, [](float value, int /* maxLength */)
+            { ParamID::ReverbDampLowFrequency, "Low Shelf Damping Frequency", { 20.0f, 20000.0f, 0.0f, 0.3f }, 250.0f, [](float value, int /* maxLength */)
               { if (value >= 1000.0f) return String(value / 1000.0f, 1) + "kHz"; else return String(value) + "Hz"; } },
-            { ParamID::ReverbDampHighFrequency, { 20.0f, 20000.0f, 0.0f, 0.3f }, 4000.0f, [](float value, int /* maxLength */)
+            { ParamID::ReverbDampHighFrequency, "High Shelf Damping Frequency", { 20.0f, 20000.0f, 0.0f, 0.3f }, 4000.0f, [](float value, int /* maxLength */)
               { if (value >= 1000.0f) return String(value / 1000.0f, 1) + "kHz"; else return String(value) + "Hz"; } },
-            { ParamID::ReverbDampLowFactor, { 0.01f, 1.0f }, 1.0f, [](float value, int /**/)
+            { ParamID::ReverbDampLowFactor, "Low Shelf Damping Amplitude", { 0.01f, 1.0f }, 1.0f, [](float value, int /**/)
               { return String(value, 2); } },
-            { ParamID::ReverbDampHighFactor, { 0.01f, 1.0f }, 1.0f, [](float value, int /**/)
+            { ParamID::ReverbDampHighFactor, "High Shelf Damping Amplitude", { 0.01f, 1.0f }, 1.0f, [](float value, int /**/)
               { return String(value, 2); } },
-            { ParamID::ReverbPreDelayTime, { 0.01f, 0.25f, 0.00001f }, 0.05f, [](float value, int /* maxLength */)
+            { ParamID::ReverbPreDelayTime, "FDN Pre Delay", { 0.01f, 0.25f, 0.00001f }, 0.05f, [](float value, int /* maxLength */)
               { return String(value * 1000.0f, 2) + "ms"; } },
         };
 
-        const std::vector<std::tuple<String, StringArray, int>> choiceParameterData {
-            { ParamID::PrePostFilter, prePostDelayFilter, 0 },
-            { ParamID::FilterType, filterType, 0 }
+        const std::vector<std::tuple<String, String, StringArray, int>> choiceParameterData {
+            { ParamID::PrePostFilter, "Pre/Post Delay Filter", prePostDelayFilter, 0 },
+            { ParamID::FilterType, "Filter Type", filterType, 0 }
         };
 
-        const std::vector<std::tuple<String, bool>> boolParameterData {
-            { ParamID::ReverbFreeze, false }
+        const std::vector<std::tuple<String, String, bool>> boolParameterData {
+            { ParamID::ReverbFreeze, "Reverb Freeze", false }
         };
     }
 }
