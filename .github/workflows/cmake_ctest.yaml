@@ -6,6 +6,7 @@ env:
   PROJECT_NAME: NiallsOwnDelay
   PLUGIN_NAME: 'Nialls Own Delay'
   BUILD_TYPE: Release
+  BUILD_DIR: Builds
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   DISPLAY: :0 # linux pluginval needs this
 
@@ -18,14 +19,14 @@ jobs:
     strategy:
       fail-fast: false # show all errors for each platform (vs. cancel jobs on error)
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-11.0]
+        os: [ubuntu-latest]
         include:
-        - os: windows-latest
-          artifact: Windows
+        # - os: windows-latest
+        #   artifact: Windows
         - os: ubuntu-latest
           artifact: Linux
-        - os: macos-11.0 # TODO: change once macos-latest catches up
-          artifact: MacOS
+        # - os: macos-11.0 # TODO: change once macos-latest catches up
+        #   artifact: MacOS
 
     steps:
     - name: Install JUCE's Linux Deps and select g++ 10
@@ -53,24 +54,28 @@ jobs:
       shell: bash
       run: cmake --preset=${{ matrix.os }}
 
+    - name: Configure Linux
+      shell: bash
+      run: cmake -B ${{ env.BUILD_DIR }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE}} -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache .
+
     - name: Build
       shell: bash
-      run: cmake --build --preset=${{ matrix.os }}-${{ env.BUILD_TYPE }}
+      run: cmake --build ${{ env.BUILD_DIR }} --config ${{ env.BUILD_TYPE }} -j$(nproc)
 
     - name: Test
       working-directory: ${{ github.workspace }}/${{ matrix.os }}
       run: ctest
 
-    # - name: Pluginval Linux
-    #   working-directory: ${{ github.workspace }}/${{ matrix.os }}
-    #   if: matrix.artifact == 'Linux'
-    #   run: |
-    #     curl -L "https://github.com/Tracktion/pluginval/releases/download/v0.3.0/pluginval_${{ matrix.artifact }}.zip" -o pluginval.zip
-    #     unzip pluginval
-    #     # start xvfb in the background
-    #     sudo /usr/bin/Xvfb $DISPLAY -screen 0 1280x1024x24 &
+    - name: Pluginval Linux
+      working-directory: ${{ env.BUILD_DIR }}
+      if: matrix.artifact == 'Linux'
+      run: |
+        curl -L "https://github.com/Tracktion/pluginval/releases/download/v0.3.0/pluginval_${{ matrix.artifact }}.zip" -o pluginval.zip
+        unzip pluginval
+        # start xvfb in the background
+        sudo /usr/bin/Xvfb $DISPLAY -screen 0 1280x1024x24 &
 
-    #     ./pluginval --strictness-level 10 --skip-gui-tests --validate-in-process --verbose --output-dir "." --validate "${{ env.PROJECT_NAME }}_artefacts/${{ env.BUILD_TYPE }}/VST3/${{ env.PLUGIN_NAME }}.vst3"
+        ./pluginval --strictness-level 10 --skip-gui-tests --validate-in-process --verbose --output-dir "." --validate "${{ env.PROJECT_NAME }}_artefacts/${{ env.BUILD_TYPE }}/VST3/${{ env.PLUGIN_NAME }}.vst3"
 
     - name: Pluginval Mac
       working-directory: ${{ github.workspace }}/${{ matrix.os }}
