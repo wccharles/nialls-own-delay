@@ -69,10 +69,10 @@ jobs:
         curl -L "https://github.com/Tracktion/pluginval/releases/download/v0.3.0/pluginval_${{ matrix.artifact }}.zip" -o pluginval.zip
         unzip pluginval
         # start xvfb in the background
-        ls -R
-        # sudo /usr/bin/Xvfb $DISPLAY -screen 0 1280x1024x24 &
 
-        # ./pluginval --strictness-level 10 --skip-gui-tests --validate-in-process --verbose --output-dir "." --validate "${{ env.PROJECT_NAME }}_artefacts/${{ env.BUILD_TYPE }}/VST3/${{ env.PLUGIN_NAME }}.vst3"
+        sudo /usr/bin/Xvfb $DISPLAY -screen 0 1280x1024x24 &
+
+        ./pluginval --strictness-level 10 --skip-gui-tests --validate-in-process --verbose --output-dir "." --validate "NiallsOwnDelay_artefacts/Release/VST3/Nialls Own Delay.vst3"
 
     - name: Pluginval Mac
       working-directory: ${{ github.workspace }}/${{ matrix.os }}
