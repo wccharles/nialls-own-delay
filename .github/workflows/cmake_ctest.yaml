@@ -58,9 +58,9 @@ jobs:
       shell: bash
       run: cmake --build ${{ env.BUILD_DIR }} --config ${{ env.BUILD_TYPE }} -j$(nproc)
 
-    - name: Test
-      working-directory: ${{ github.workspace }}/${{ matrix.os }}
-      run: ctest
+    # - name: Test
+    #   working-directory: ${{ github.workspace }}/${{ matrix.os }}
+    #   run: ctest
 
     - name: Pluginval Linux
       working-directory: ${{ env.BUILD_DIR }}
