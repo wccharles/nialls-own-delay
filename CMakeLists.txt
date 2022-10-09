@@ -41,7 +41,7 @@ juce_add_plugin(
   BUNDLE_ID
   com.wccharles.niallsowndelay
   COMPANY_EMAIL
-  "C.walker10@edu.salford.ac.uk"
+  "dev@wccharles.com"
   COMPANY_WEBSITE
   "github.com/wccharles"
   DESCRIPTION
